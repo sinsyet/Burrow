@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/YGX.iml" filepath="$PROJECT_DIR$/YGX.iml" />
+      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/burrowclient/burrowclient.iml" filepath="$PROJECT_DIR$/burrowclient/burrowclient.iml" />
+      <module fileurl="file://$PROJECT_DIR$/burrowserver/burrowserver.iml" filepath="$PROJECT_DIR$/burrowserver/burrowserver.iml" />
+    </modules>
+  </component>
+</project>
