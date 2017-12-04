@@ -40,10 +40,9 @@ public class EventBus {
 
                 Class paramClass = annotationAnno.value();
                 if(paramClass != obj.getClass()) continue;
-                int parameterCount = m.getParameterCount();
 
                 Class<?>[] parameterTypes = m.getParameterTypes();
-                if(parameterCount != 1) continue;   // 只能有一个参数
+                if(parameterTypes.length != 1) continue;   // 只能有一个参数
 
                 if(parameterTypes[0] != paramClass)
                     throw new IllegalStateException("annotation value must eq with paramter type");
