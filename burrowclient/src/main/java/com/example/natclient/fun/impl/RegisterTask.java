@@ -19,7 +19,6 @@ import com.example.natclient.fun.base.ISelectedHandler;
 
 public class RegisterTask extends AbsTask {
 
-
     public RegisterTask(AbsSelectedHandler handler) {
         super(handler);
     }

@@ -1,15 +1,18 @@
 package com.example.natclient;
 
 import com.alibaba.fastjson.JSONObject;
+import com.example.engine.TaskExecutors;
+import com.example.eventbus.EventBus;
+import com.example.eventbus.anno.Subscribe;
 import com.example.natclient.app.Key;
+import com.example.natclient.bean.Message;
 import com.example.natclient.bean.NatResponse;
 import com.example.natclient.engine.RequestQueue;
-import com.example.natclient.engine.TaskExecutors;
 import com.example.natclient.fun.base.IHandleObserver;
 import com.example.natclient.fun.base.IRequestObserver;
 import com.example.natclient.fun.base.ISelectedHandler;
 import com.example.natclient.fun.impl.BaseHandlerImpl;
-import com.example.natclient.utils.Log;
+import com.example.utils.Log;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -63,6 +66,7 @@ public class NatClient implements IHandleObserver {
         channel.configureBlocking(false);
         handler.setHandleObserver(this);
         channel.register(selector, SelectionKey.OP_READ);
+        EventBus.subscribe(this);
     }
 
     private boolean mLaunchFlag = false;
@@ -183,6 +187,17 @@ public class NatClient implements IHandleObserver {
             RequestQueue.put(mid,observer);
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    @Subscribe(Message.class)
+    public void sendMsg(Message msg){
+        try {
+            channel.send(
+                    ByteBuffer.wrap(msg.msg.getBytes("UTF-8")),
+                    new InetSocketAddress(msg.host,msg.port));
+        } catch (IOException e) {
+
         }
     }
 }

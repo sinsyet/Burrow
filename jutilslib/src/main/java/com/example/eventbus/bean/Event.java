@@ -1,4 +1,4 @@
-package com.example.burrowserver.eventbus.bean;
+package com.example.eventbus.bean;
 
 /**
  *

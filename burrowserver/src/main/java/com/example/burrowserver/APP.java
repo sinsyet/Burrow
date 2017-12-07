@@ -1,8 +1,8 @@
 package com.example.burrowserver;
 
 import com.example.burrowserver.server.UdpNatServer;
-import com.example.burrowserver.utils.Log;
-import com.example.burrowserver.utils.ResourceUtil;
+import com.example.utils.Log;
+import com.example.utils.ResourceUtil;
 
 import java.io.IOException;
 

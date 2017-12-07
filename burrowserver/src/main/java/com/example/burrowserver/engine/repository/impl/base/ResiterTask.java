@@ -5,8 +5,7 @@ import com.example.burrowserver.base.Key;
 import com.example.burrowserver.bean.NatClient;
 import com.example.burrowserver.engine.repository.Repository;
 import com.example.burrowserver.engine.repository.base.AbsTask;
-import com.example.burrowserver.utils.Log;
-import com.example.burrowserver.utils.NatUtil;
+import com.example.utils.NatUtil;
 
 import java.nio.channels.DatagramChannel;
 

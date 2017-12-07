@@ -2,10 +2,11 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/YGX.iml" filepath="$PROJECT_DIR$/YGX.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Burrow.iml" filepath="$PROJECT_DIR$/Burrow.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/burrowclient/burrowclient.iml" filepath="$PROJECT_DIR$/burrowclient/burrowclient.iml" />
       <module fileurl="file://$PROJECT_DIR$/burrowserver/burrowserver.iml" filepath="$PROJECT_DIR$/burrowserver/burrowserver.iml" />
+      <module fileurl="file://$PROJECT_DIR$/jutilslib/jutilslib.iml" filepath="$PROJECT_DIR$/jutilslib/jutilslib.iml" />
     </modules>
   </component>
 </project>

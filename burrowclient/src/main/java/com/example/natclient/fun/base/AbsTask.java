@@ -1,7 +1,11 @@
 package com.example.natclient.fun.base;
 
 import com.alibaba.fastjson.JSONObject;
-import com.example.natclient.engine.TaskExecutors;
+import com.example.engine.TaskExecutors;
+import com.example.eventbus.EventBus;
+import com.example.eventbus.bean.Event;
+import com.example.natclient.NatClient;
+import com.example.natclient.bean.Message;
 
 /**
  *
@@ -31,5 +35,30 @@ public abstract class AbsTask {
         TaskExecutors.exec(r);
     }
 
+    protected JSONObject getRespJson(JSONObject obj){
+        JSONObject resp = new JSONObject();
+        if(obj.containsKey("t")) {
+            int t = obj.getIntValue("t");
+            resp.put("t",-t);
+        }
+        if(obj.containsKey("mid")) {
+            long mid = obj.getLongValue("mid");
+            resp.put("mid",mid);
+        }
+        return resp;
+    }
+
+    protected void sendMsg(String msg,String host,int port){
+        Message message = new Message();
+        message.msg = msg;
+        message.host = host;
+        message.port = port;
+        EventBus.post(
+                new Event.Builder()
+                        .obj(message)
+                        .to(NatClient.class)
+                        .build()
+        );
+    }
     protected abstract void onRunTask(JSONObject json);
 }

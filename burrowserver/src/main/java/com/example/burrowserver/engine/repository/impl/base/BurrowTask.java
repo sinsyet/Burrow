@@ -6,7 +6,7 @@ import com.example.burrowserver.bean.BurrowAction;
 import com.example.burrowserver.bean.NatClient;
 import com.example.burrowserver.engine.repository.Repository;
 import com.example.burrowserver.engine.repository.base.AbsTask;
-import com.example.burrowserver.eventbus.EventBus;
+import com.example.eventbus.EventBus;
 
 import java.nio.channels.DatagramChannel;
 

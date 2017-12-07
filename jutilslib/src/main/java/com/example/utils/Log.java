@@ -1,4 +1,4 @@
-package com.example.burrowserver.utils;
+package com.example.utils;
 
 
 public class Log {

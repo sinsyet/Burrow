@@ -3,7 +3,7 @@ package com.example.burrowserver.engine.repository.base;
 
 import com.alibaba.fastjson.JSONObject;
 import com.example.burrowserver.engine.TaskExecutor;
-import com.example.burrowserver.utils.Log;
+import com.example.utils.Log;
 
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;

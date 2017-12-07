@@ -6,6 +6,7 @@ import com.example.burrowserver.engine.repository.Repository;
 import com.example.burrowserver.engine.repository.base.AbsTask;
 
 import java.nio.channels.DatagramChannel;
+import java.util.HashSet;
 import java.util.Set;
 
 /**
@@ -26,8 +27,10 @@ public class GetClientsTask extends AbsTask {
         if (Repository.containsTag(tag)) {
             Set<String> tags = Repository.getTags();
             resp.put("code",200);
+            HashSet<String> hashSet = new HashSet<>(tags);
+            hashSet.remove(tag);
             JSONObject result = new JSONObject();
-            result.put("tags",tags);
+            result.put("tags",hashSet);
             resp.put("result",result);
         }else {
             resp.put("code", Key.Code.NO_TAG);

@@ -3,7 +3,7 @@ package com.example.burrowserver.engine.impl;
 import com.example.burrowserver.engine.repository.Repository;
 import com.example.burrowserver.engine.fun.IAcceptMsgHandler;
 import com.example.burrowserver.engine.fun.ISelectedHandler;
-import com.example.burrowserver.utils.NatUtil;
+import com.example.utils.NatUtil;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;

@@ -1,8 +1,5 @@
 package com.example.burrowserver.server;
 
-
-
-
 import com.example.burrowserver.bean.BurrowAction;
 import com.example.burrowserver.engine.IBurrowObserver;
 import com.example.burrowserver.engine.repository.Repository;
@@ -11,9 +8,9 @@ import com.example.burrowserver.engine.fun.ISelectedHandler;
 import com.example.burrowserver.engine.impl.BaseAcceptMsgHandleImpl;
 import com.example.burrowserver.engine.impl.BurrowAcceptMsgHandleImpl;
 import com.example.burrowserver.engine.impl.SelectedHandlerImpl;
-import com.example.burrowserver.eventbus.EventBus;
-import com.example.burrowserver.eventbus.anno.Subscribe;
-import com.example.burrowserver.utils.Log;
+import com.example.eventbus.EventBus;
+import com.example.eventbus.anno.Subscribe;
+import com.example.utils.Log;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -105,7 +102,14 @@ public class UdpNatServer{
 
     @Subscribe(BurrowAction.class)
     public void onBurrowAction(BurrowAction burrowAction){
-        Log.e(TAG,"onBurrowAction: "+burrowAction.getBurrowToken());
+        try {
+            burrowAction.launch(mBurrowChannel);
+            // start burrow success
+            Log.e(TAG,"start burrow success");
+        } catch (IOException e) {
+            // start burrow fail
+            Log.e(TAG,"start burrow fail "+e.getMessage());
+        }
     }
 
     private Map<String,BurrowAction> mBurrowActions = new HashMap<>();

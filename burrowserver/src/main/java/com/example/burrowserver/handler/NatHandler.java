@@ -8,9 +8,7 @@ import com.example.burrowserver.bean.NatClient;
 import com.example.burrowserver.engine.BurrowObserverImpl2;
 import com.example.burrowserver.engine.repository.Repository;
 import com.example.burrowserver.server.UdpNatServer;
-import com.example.burrowserver.utils.NatUtil;
 
-import java.net.InetSocketAddress;
 import java.util.Set;
 
 public class NatHandler {
@@ -23,7 +21,7 @@ public class NatHandler {
 
         int port = remote.getPort();
         String hostName = remote.getHostName();
-        String tag = NatUtil.generateTag(hostName, String.valueOf(port));
+        String tag = NsatUtil.generateTag(hostName, String.valueOf(port));
         NatClient natClient = Repository.getNatClientByTag(tag);
         if(natClient == null){
             natClient = new NatClient(hostName,

@@ -1,4 +1,4 @@
-package com.example.natclient.utils;
+package com.example.utils;
 
 
 import java.nio.ByteBuffer;
@@ -11,7 +11,8 @@ public class NatUtil {
         byte[] array = buf.array();
         int offset = buf.arrayOffset();
         int length = buf.position();
-        if (reset) buf.clear();
+        if (reset) /*buf.reset();*/
+        buf.clear();
         return new String(array, offset, length);
     }
 
@@ -25,5 +26,19 @@ public class NatUtil {
         return tag;
     }
 
+    private static BASE64Encoder base64Encoder = new BASE64Encoder();
+    public static String base64Encode(Object...msg){
+        StringBuilder sBuf = new StringBuilder();
+        for(Object obj:msg){
+            if(obj == null) continue;
+            sBuf.append(obj.toString());
+        }
+        try {
+            return base64Encoder.encode(sBuf.toString().getBytes("UTF-8"));
+        } catch (Exception ignored) {
+
+        }
+        return "";
+    }
 
 }

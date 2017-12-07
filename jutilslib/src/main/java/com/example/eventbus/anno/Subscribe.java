@@ -1,4 +1,4 @@
-package com.example.burrowserver.eventbus.anno;
+package com.example.eventbus.anno;
 
 
 import java.lang.annotation.ElementType;

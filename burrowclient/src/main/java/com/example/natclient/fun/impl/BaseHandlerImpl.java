@@ -3,10 +3,9 @@ package com.example.natclient.fun.impl;
 import com.alibaba.fastjson.JSONObject;
 import com.example.natclient.fun.base.AbsSelectedHandler;
 import com.example.natclient.fun.base.AbsTask;
-import com.example.natclient.utils.Log;
-import com.example.natclient.utils.NatUtil;
+import com.example.utils.Log;
+import com.example.utils.NatUtil;
 
-import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
 import java.nio.channels.DatagramChannel;
@@ -29,8 +28,9 @@ public class BaseHandlerImpl extends AbsSelectedHandler{
     {
         mTasks.put(-1,new RegisterTask(this));
         mTasks.put(-2,new PitpatTask(this));
+        mTasks.put(10,new BurrowTask(this,getChannel()));
+        mTasks.put(12,new BurrowRespTask(this));
     }
-
 
     public BaseHandlerImpl(DatagramChannel channel) {
         super(channel);

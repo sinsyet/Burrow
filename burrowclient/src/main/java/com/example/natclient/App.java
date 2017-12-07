@@ -1,11 +1,8 @@
 package com.example.natclient;
 
-
 import com.example.natclient.fun.base.IFun;
-import com.example.natclient.fun.base.IRequestObserver;
-import com.example.natclient.utils.Log;
-import com.example.natclient.utils.ResourceUtil;
-
+import com.example.utils.Log;
+import com.example.utils.ResourceUtil;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -46,24 +43,18 @@ public class App {
 
     private static HashMap<String,IFun> sFuns = new HashMap<>();
     static {
-        sFuns.put("get client", new IFun() {
-            @Override
-            public void fun() {
+        sFuns.put("get client", () -> {
                 natClient.getClient(resp -> {
                     System.out.println(resp.toString());
                 });
             }
-        });
+        );
 
-        sFuns.put("burrow", new IFun() {
-            @Override
-            public void fun() {
-                String target = input("input target:");
-                natClient.burrow(target, resp -> {
-                   Log.e(TAG,""+resp.toString());
-                });
-            }
+        sFuns.put("burrow", () -> {
+            String target = input("input target:");
+            natClient.burrow(target, resp -> {
+               Log.e(TAG,""+resp.toString());
+            });
         });
-
     }
 }

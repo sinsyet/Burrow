@@ -7,7 +7,7 @@ import com.example.burrowserver.engine.repository.impl.base.BurrowTask;
 import com.example.burrowserver.engine.repository.impl.base.GetClientsTask;
 import com.example.burrowserver.engine.repository.impl.base.PitpatTask;
 import com.example.burrowserver.engine.repository.impl.base.ResiterTask;
-import com.example.burrowserver.utils.Log;
+import com.example.utils.Log;
 
 import java.net.InetSocketAddress;
 import java.nio.channels.DatagramChannel;

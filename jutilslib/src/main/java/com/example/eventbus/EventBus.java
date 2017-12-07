@@ -1,14 +1,12 @@
-package com.example.burrowserver.eventbus;
+package com.example.eventbus;
 
-import com.example.burrowserver.eventbus.anno.Subscribe;
-import com.example.burrowserver.eventbus.bean.Event;
-import com.example.burrowserver.utils.Log;
+import com.example.eventbus.anno.Subscribe;
+import com.example.eventbus.bean.Event;
+import com.example.utils.Log;
 
 import java.lang.reflect.Method;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class EventBus {
@@ -36,7 +34,6 @@ public class EventBus {
             if (subscriber == null) {
                 continue;
             }
-
            findMethod2Post(subscriber,obj);
         }
     }

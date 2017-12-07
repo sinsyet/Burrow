@@ -1,7 +1,7 @@
 package com.example.burrowserver.engine.base;
 
 import com.example.burrowserver.engine.fun.IAcceptMsgHandler;
-import com.example.burrowserver.utils.Log;
+import com.example.utils.Log;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
