@@ -1,6 +1,7 @@
 package com.example.natclient.fun.base;
 
 import java.nio.channels.DatagramChannel;
+import java.nio.channels.SelectionKey;
 
 /**
  *
@@ -37,5 +38,20 @@ public abstract class AbsSelectedHandler implements ISelectedHandler,IHandleObse
         if (observer != null) {
             observer.onRegistered(tag, host, port);
         }
+    }
+
+    @Override
+    public void onAccept(SelectionKey key) {
+        // udp channel no supprot acctpe operation
+    }
+
+    @Override
+    public void onWrite(SelectionKey key) {
+        // udp channel no support write operation
+    }
+
+    @Override
+    public void onConnect(SelectionKey key) {
+        // udp channel no support connect operation
     }
 }

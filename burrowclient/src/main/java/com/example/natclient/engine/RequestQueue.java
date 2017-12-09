@@ -1,5 +1,6 @@
 package com.example.natclient.engine;
 
+import com.example.natclient.bean.BurrowEvent;
 import com.example.natclient.fun.base.IRequestObserver;
 
 import java.util.HashMap;
@@ -24,5 +25,14 @@ public class RequestQueue {
 
     public static IRequestObserver remove(long mid){
         return mRequestQueue.remove(mid);
+    }
+
+    private static Map<String,BurrowEvent> sBurrowEvents = new HashMap<>();
+    public static void put(String key,BurrowEvent value){
+        sBurrowEvents.put(key, value);
+    }
+
+    public static BurrowEvent getBurrowEvent(String token){
+        return sBurrowEvents.get(token);
     }
 }

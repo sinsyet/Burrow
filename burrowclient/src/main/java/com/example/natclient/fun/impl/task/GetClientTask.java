@@ -1,4 +1,4 @@
-package com.example.natclient.fun.impl;
+package com.example.natclient.fun.impl.task;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;

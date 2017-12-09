@@ -18,4 +18,5 @@ public interface Key {
 
         String CLOSED_CHANNEL       = "closed channel";
     }
+
 }

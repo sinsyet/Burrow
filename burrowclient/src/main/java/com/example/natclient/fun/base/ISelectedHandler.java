@@ -13,6 +13,13 @@ public interface ISelectedHandler {
 
     void onRead(SelectionKey key);
 
+    void onAccept(SelectionKey key);
+
+    void onWrite(SelectionKey key);
+
+    void onConnect(SelectionKey key);
+
     void setHandleObserver(IHandleObserver observer);
+
 
 }

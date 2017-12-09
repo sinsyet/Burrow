@@ -5,13 +5,16 @@ import com.example.engine.TaskExecutors;
 import com.example.eventbus.EventBus;
 import com.example.eventbus.anno.Subscribe;
 import com.example.natclient.app.Key;
+import com.example.natclient.bean.BurrowEvent;
 import com.example.natclient.bean.Message;
 import com.example.natclient.bean.NatResponse;
 import com.example.natclient.engine.RequestQueue;
+import com.example.natclient.fun.base.AbsBurrowHandler;
 import com.example.natclient.fun.base.IHandleObserver;
 import com.example.natclient.fun.base.IRequestObserver;
 import com.example.natclient.fun.base.ISelectedHandler;
-import com.example.natclient.fun.impl.BaseHandlerImpl;
+import com.example.natclient.fun.impl.burrowhandler.ConnectRemoteHandler;
+import com.example.natclient.fun.impl.net.BaseHandlerImpl;
 import com.example.utils.Log;
 
 import java.io.IOException;
@@ -190,6 +193,11 @@ public class NatClient implements IHandleObserver {
         }
     }
 
+    private AbsBurrowHandler mBurrowHandler;
+    private void initBurrowHandler(){
+        mBurrowHandler = new ConnectRemoteHandler();
+    }
+
     @Subscribe(Message.class)
     public void sendMsg(Message msg){
         try {
@@ -199,5 +207,10 @@ public class NatClient implements IHandleObserver {
         } catch (IOException e) {
 
         }
+    }
+
+    @Subscribe(Message.class)
+    public void onBurrowEventCreate(BurrowEvent event){
+        mBurrowHandler.onBurrow(event);
     }
 }

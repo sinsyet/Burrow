@@ -1,8 +1,12 @@
-package com.example.natclient.fun.impl;
+package com.example.natclient.fun.impl.net;
 
 import com.alibaba.fastjson.JSONObject;
 import com.example.natclient.fun.base.AbsSelectedHandler;
 import com.example.natclient.fun.base.AbsTask;
+import com.example.natclient.fun.impl.task.BurrowRespTask;
+import com.example.natclient.fun.impl.task.BurrowTask;
+import com.example.natclient.fun.impl.task.PitpatTask;
+import com.example.natclient.fun.impl.task.RegisterTask;
 import com.example.utils.Log;
 import com.example.utils.NatUtil;
 
@@ -59,5 +63,20 @@ public class BaseHandlerImpl extends AbsSelectedHandler{
         } catch (Exception e) {
             Log.e(TAG,"error when handle accept: "+e.getMessage());
         }
+    }
+
+    @Override
+    public void onAccept(SelectionKey key) {
+
+    }
+
+    @Override
+    public void onWrite(SelectionKey key) {
+
+    }
+
+    @Override
+    public void onConnect(SelectionKey key) {
+
     }
 }
