@@ -1,34 +1,25 @@
-package com.example.natclient.fun.impl.task;
+package com.example.natclient.fun.impl.resp;
 
 import com.alibaba.fastjson.JSONObject;
 import com.example.engine.Handler;
 import com.example.natclient.app.Key;
 import com.example.natclient.bean.BurrowEvent;
-import com.example.natclient.fun.base.AbsUDPChannelHandler;
 import com.example.natclient.fun.base.AbsTask;
+import com.example.natclient.fun.base.AbsUDPChannelHandler;
 import com.example.natclient.repository.Repository;
 
-import java.io.IOException;
-import java.net.InetSocketAddress;
-import java.nio.ByteBuffer;
-import java.nio.channels.DatagramChannel;
 import java.util.TimerTask;
 
 /**
  * @author YGX
  *
- * 接收到打洞请求时执行的任务,
+ * response type -4
  *
- * 处理逻辑就是将准备打洞使用的端口返回给服务器,
- * 注意, 只返回端口, ip或主机由服务器去获取, 因为客户端获取到的只是局域网的ip;
- * 服务器才能获取到公网ip;
  */
-public class BurrowTask extends AbsTask {
-    private final DatagramChannel channel;
+public class BurrowResp_4Task extends AbsTask {
 
-    public BurrowTask(AbsUDPChannelHandler handler, DatagramChannel channel) {
+    public BurrowResp_4Task(AbsUDPChannelHandler handler) {
         super(handler);
-        this.channel = channel;
     }
 
     @Override
@@ -60,13 +51,5 @@ public class BurrowTask extends AbsTask {
                 sendMsg(sayHi.toString(),action.host,action.port);
             }
         },500);
-    }
-
-    @Override
-    protected void sendMsg(String msg, String host, int port) {
-        try {
-            channel.send(ByteBuffer.wrap(msg.getBytes("UTF-8")),new InetSocketAddress(host,port));
-        } catch (IOException e) {
-        }
     }
 }

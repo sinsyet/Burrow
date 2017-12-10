@@ -1,6 +1,5 @@
 package com.example.burrowserver.bean;
 
-
 import com.alibaba.fastjson.JSONObject;
 import com.example.burrowserver.engine.IBurrowObserver;
 import com.example.burrowserver.engine.repository.Repository;
@@ -45,9 +44,11 @@ public class BurrowAction {
     public void launch(DatagramChannel channel) throws IOException {
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("t",10);
-        jsonObject.put("token",getBurrowToken());
+        long mid = System.currentTimeMillis();
+        jsonObject.put("mid", mid);
         // jsonObject.put("mid",System.currentTimeMillis());
         JSONObject extra = new JSONObject();
+        extra.put("token",getBurrowToken());
         extra.put("host",local.host);
         extra.put("port",local.port);
         jsonObject.put("extra",extra);

@@ -57,4 +57,8 @@ public class Repository {
     {
         return sBurrowActionMaps.get(key);
     }
+
+    public static void releaseBurrowAction(String token){
+        sBurrowActionMaps.remove(token);
+    }
 }

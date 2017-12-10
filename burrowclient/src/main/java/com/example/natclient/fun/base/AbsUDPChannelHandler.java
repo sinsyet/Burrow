@@ -8,12 +8,12 @@ import java.nio.channels.SelectionKey;
  * @author YGX
  */
 
-public abstract class AbsSelectedHandler implements ISelectedHandler,IHandleObserver {
+public abstract class AbsUDPChannelHandler implements IChannelHandler,IHandleObserver {
 
     private DatagramChannel channel;
     private IHandleObserver observer;
 
-    public AbsSelectedHandler(DatagramChannel channel){
+    public AbsUDPChannelHandler(DatagramChannel channel){
         this.channel = channel;
     }
 

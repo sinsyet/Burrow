@@ -1,11 +1,9 @@
-package com.example.natclient.fun.impl.net;
-
-import com.example.natclient.fun.base.IHandleObserver;
-import com.example.natclient.fun.base.ISelectedHandler;
+package com.example.natclient.fun.base;
 
 import java.nio.channels.SelectionKey;
 
-public class BurrowChannelHandlerImpl implements ISelectedHandler {
+public class AbsTCPChannelHandler implements IChannelHandler {
+
     @Override
     public void onRead(SelectionKey key) {
 

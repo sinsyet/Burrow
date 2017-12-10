@@ -41,7 +41,6 @@ public abstract class AbsTask {
 
     protected void sendMsg(String msg, String host, int port) {
         if (msg == null) throw new IllegalArgumentException("send msg can't be null");
-        // InetSocketAddress target = InetSocketAddress.createUnresolved(host, port);
         try {
             InetSocketAddress target = new InetSocketAddress(host, port);
             channel.send(ByteBuffer.wrap(msg.getBytes("UTF-8")), target);

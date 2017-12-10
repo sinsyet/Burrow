@@ -6,7 +6,11 @@ public class BurrowEvent {
     public int port;
     public String token;
     public long action;
+    public long activeStamp;
 
+    public void updateActiveStamp(){
+        this.activeStamp = System.currentTimeMillis();
+    }
     public interface ACTION{
         int REQUEST 		= 1;	 // 客户端请求NAT打洞
         int RESPONSE		= 2;	 // 客户端响应NAT打洞, 一个完整的打洞事件, 请求和响应只能有一个

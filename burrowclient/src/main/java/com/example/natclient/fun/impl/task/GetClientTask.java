@@ -4,7 +4,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.example.natclient.bean.NatResponse;
 import com.example.natclient.engine.RequestQueue;
-import com.example.natclient.fun.base.AbsSelectedHandler;
+import com.example.natclient.fun.base.AbsUDPChannelHandler;
 import com.example.natclient.fun.base.AbsTask;
 import com.example.natclient.fun.base.IRequestObserver;
 
@@ -16,7 +16,7 @@ import com.example.natclient.fun.base.IRequestObserver;
 
 public class GetClientTask extends AbsTask {
 
-    public GetClientTask(AbsSelectedHandler handler) {
+    public GetClientTask(AbsUDPChannelHandler handler) {
         super(handler);
     }
 

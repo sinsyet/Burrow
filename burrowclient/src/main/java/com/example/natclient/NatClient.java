@@ -12,9 +12,11 @@ import com.example.natclient.engine.RequestQueue;
 import com.example.natclient.fun.base.AbsBurrowHandler;
 import com.example.natclient.fun.base.IHandleObserver;
 import com.example.natclient.fun.base.IRequestObserver;
-import com.example.natclient.fun.base.ISelectedHandler;
+import com.example.natclient.fun.base.IChannelHandler;
 import com.example.natclient.fun.impl.burrowhandler.ConnectRemoteHandler;
-import com.example.natclient.fun.impl.net.BaseHandlerImpl;
+import com.example.natclient.fun.impl.channelhandler.BaseHandlerImpl;
+import com.example.natclient.fun.impl.channelhandler.InitiativeBurrowHandlerImpl;
+import com.example.natclient.repository.ChannelRepository;
 import com.example.utils.Log;
 
 import java.io.IOException;
@@ -33,10 +35,9 @@ import java.util.TimerTask;
  *
  * 客户端
  */
-
 public class NatClient implements IHandleObserver {
     private static final String TAG = "NatClient";
-    private ISelectedHandler handler;
+    private IChannelHandler handler;
     private Selector selector;
     private DatagramChannel channel;
 
@@ -186,11 +187,28 @@ public class NatClient implements IHandleObserver {
         jsonObject.put("ltag",tag);
         jsonObject.put("rtag",target);
         try {
-            sendMsg(jsonObject.toString(),host,port);
+            DatagramChannel burrowChannel = getBurrowChannel();
+            sendMsg(burrowChannel,jsonObject.toString(),host,port);
             RequestQueue.put(mid,observer);
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    private void sendMsg(DatagramChannel channel,String msg,String host,int port) {
+        try {
+            channel.send(ByteBuffer.wrap(msg.getBytes("utf-8")),new InetSocketAddress(host,port));
+        } catch (IOException e) {
+
+        }
+    }
+
+    private DatagramChannel getBurrowChannel() throws IOException {
+        DatagramChannel datagramChannel = DatagramChannel.open();
+        datagramChannel.configureBlocking(false);
+        datagramChannel.register(selector,SelectionKey.OP_READ);
+        ChannelRepository.register(datagramChannel,new InitiativeBurrowHandlerImpl(datagramChannel));
+        return datagramChannel;
     }
 
     private AbsBurrowHandler mBurrowHandler;

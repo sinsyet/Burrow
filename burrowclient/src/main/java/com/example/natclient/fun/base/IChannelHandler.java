@@ -9,7 +9,7 @@ import java.nio.channels.Selector;
  * 处理{@link Selector#select()}结果的接口
  */
 
-public interface ISelectedHandler {
+public interface IChannelHandler {
 
     void onRead(SelectionKey key);
 

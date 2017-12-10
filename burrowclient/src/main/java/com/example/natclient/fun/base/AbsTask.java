@@ -16,17 +16,21 @@ import com.example.natclient.bean.Message;
 
 public abstract class AbsTask {
 
-    protected AbsSelectedHandler handler;
+    protected AbsUDPChannelHandler handler;
     private JSONObject json;
 
-    public AbsTask(AbsSelectedHandler handler){
+    public AbsTask(AbsUDPChannelHandler handler){
         this.handler = handler;
     }
 
     private Runnable r = new Runnable() {
         @Override
         public void run() {
-            onRunTask(json);
+            try {
+                onRunTask(json);
+            }catch (Exception ignored){
+
+            }
         }
     };
 

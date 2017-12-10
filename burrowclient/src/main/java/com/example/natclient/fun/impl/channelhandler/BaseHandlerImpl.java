@@ -1,7 +1,7 @@
-package com.example.natclient.fun.impl.net;
+package com.example.natclient.fun.impl.channelhandler;
 
 import com.alibaba.fastjson.JSONObject;
-import com.example.natclient.fun.base.AbsSelectedHandler;
+import com.example.natclient.fun.base.AbsUDPChannelHandler;
 import com.example.natclient.fun.base.AbsTask;
 import com.example.natclient.fun.impl.task.BurrowRespTask;
 import com.example.natclient.fun.impl.task.BurrowTask;
@@ -24,7 +24,7 @@ import java.util.Map;
  * 基本处理类
  */
 
-public class BaseHandlerImpl extends AbsSelectedHandler{
+public class BaseHandlerImpl extends AbsUDPChannelHandler {
     private static final String TAG = "BaseHandlerImpl";
 
     private ByteBuffer byteBuffer = ByteBuffer.allocate(1024);

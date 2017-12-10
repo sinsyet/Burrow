@@ -45,8 +45,11 @@ public class BurrowTask extends AbsTask {
         JSONObject resp = getResponseJson(obj);
         // local tag
         String ltag = obj.getString("ltag");
+
+        JSONObject extra = obj.getJSONObject("extra");
         // remote tag
-        String rtag = obj.getString("rtag");
+        String rtag = extra.getString("rtag");
+        int port = extra.getIntValue("port");
         if(!Repository.containsTag(ltag)){
             resp.put("code", Key.Code.NO_TAG);
             resp.put("em",Key.Msg.NO_LOCAL_TAG);
@@ -62,18 +65,20 @@ public class BurrowTask extends AbsTask {
         }
 
         NatClient natClient = Repository.getNatClientByTag(rtag);
-        if(natClient.isNating){
+        /*if(natClient.isNating){
             resp.put("code", Key.Code.REMOTE_IS_NATING);
             resp.put("em",Key.Msg.REMOTE_IS_NATING);
             sendMsg(resp.toString());
             return;
         }
+        暂时多个用户同时打洞
+        */
 
         BurrowAction burrowAction = new BurrowAction(Repository.getNatClientByTag(ltag), natClient);
         resp.put("code",Key.Code.OK);
-        JSONObject result = new JSONObject();
-        result.put("token",burrowAction.getBurrowToken());
-        resp.put("result",result);
+        JSONObject respExtra = new JSONObject();
+        respExtra.put("token",burrowAction.getBurrowToken());
+        resp.put("extra",respExtra);
         sendMsg(resp.toString());
         EventBus.post(burrowAction);
     }
