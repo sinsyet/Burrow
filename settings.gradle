@@ -1,1 +1,1 @@
-include ':app', ':burrowserver', ':burrowclient', ':jutilslib'
+include ':app', ':burrowserver', ':burrowclient', ':jutilslib', ':baseburrow'
