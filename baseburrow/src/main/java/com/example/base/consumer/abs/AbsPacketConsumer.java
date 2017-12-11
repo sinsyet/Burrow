@@ -19,7 +19,7 @@ public abstract class AbsPacketConsumer {
     public AbsPacketConsumer setAndReturnNextPacketConsumer(AbsPacketConsumer next){
         if(next == null)
             throw new IllegalStateException(
-                    "next packer consumer can't be null");
+                    "next packet consumer can't be null");
         this.mNext = next;
         return next;
     }
