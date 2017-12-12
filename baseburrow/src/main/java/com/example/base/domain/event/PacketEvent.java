@@ -1,5 +1,7 @@
 package com.example.base.domain.event;
 
+import com.alibaba.fastjson.JSONObject;
+
 /**
  * @author YGX
  *
@@ -8,7 +10,7 @@ package com.example.base.domain.event;
 public class PacketEvent {
     public String fromHost;
     public int fromPort;
-    public String msg;
+    public JSONObject msg;
 
     private PacketEvent(Builder builder){
         this.fromHost = builder.host;
@@ -22,7 +24,7 @@ public class PacketEvent {
         private int initFlag;
         private String host;
         private int port;
-        private String msg;
+        private JSONObject msg;
 
         public Builder(){
             initFlag = 0;
@@ -43,7 +45,7 @@ public class PacketEvent {
             return this;
         }
 
-        public Builder msg(String msg){
+        public Builder msg(JSONObject msg){
             if(msg == null)
                 throw new IllegalStateException(
                         "msg can't be null"

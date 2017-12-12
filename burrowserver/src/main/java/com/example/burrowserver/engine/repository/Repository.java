@@ -4,7 +4,6 @@ package com.example.burrowserver.engine.repository;
 
 import com.example.burrowserver.bean.BurrowAction;
 import com.example.burrowserver.bean.NatClient;
-import com.example.burrowserver.engine.fun.IAcceptMsgHandler;
 
 import java.nio.channels.DatagramChannel;
 import java.util.ArrayList;
@@ -14,8 +13,7 @@ import java.util.Set;
 
 public class Repository {
     private static Map<String,NatClient> sNatClients = new HashMap<>();
-    private static Map<DatagramChannel,IAcceptMsgHandler> sChannel2MsgHandler
-            = new HashMap<>();
+
     private static Map<String,BurrowAction> sBurrowActionMaps = new HashMap<>();
 
     public static boolean containsTag(String tag){
@@ -41,12 +39,6 @@ public class Repository {
         }
     }*/
 
-    public static void registerMsgHandler(DatagramChannel channel,IAcceptMsgHandler handler){
-        sChannel2MsgHandler.put(channel,handler);
-    }
-    public static IAcceptMsgHandler getMsgHandler(DatagramChannel channel){
-        return sChannel2MsgHandler.get(channel);
-    }
 
     public static void put(String key,BurrowAction action){
         BurrowAction burrowAction = sBurrowActionMaps.put(key, action);

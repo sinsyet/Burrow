@@ -1,7 +1,6 @@
 package com.example.burrowserver.bean;
 
 import com.alibaba.fastjson.JSONObject;
-import com.example.burrowserver.engine.IBurrowObserver;
 import com.example.burrowserver.engine.repository.Repository;
 import com.example.utils.NatUtil;
 
@@ -13,7 +12,6 @@ import java.nio.channels.DatagramChannel;
 public class BurrowAction {
     private NatClient local;
     private NatClient remote;
-    private IBurrowObserver observer;
     private long activeStamp;
 
     public NatClient getLocal(){ return local;}
@@ -27,9 +25,6 @@ public class BurrowAction {
         this.remote = remote;
     }
 
-    public void setObserver(IBurrowObserver observer){
-        this.observer = observer;
-    }
 
     /**
      * 生成打洞token

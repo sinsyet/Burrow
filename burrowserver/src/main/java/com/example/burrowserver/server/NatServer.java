@@ -4,11 +4,15 @@ import com.example.base.channel.ifun.IChannelHandler;
 import com.example.base.consumer.abs.AbsPacketConsumer;
 import com.example.burrowserver.consumer.channel.BaseUDPChannelHandler;
 import com.example.burrowserver.consumer.packet.BasePacketConsumer;
+import com.example.burrowserver.consumer.packet.BurrowPacketConsumer;
 import com.example.engine.TaskExecutors;
 import com.example.eventbus.EventBus;
+import com.example.utils.Log;
+import com.example.utils.NatUtil;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
+import java.net.SocketAddress;
 import java.nio.channels.DatagramChannel;
 import java.nio.channels.SelectableChannel;
 import java.nio.channels.SelectionKey;
@@ -24,8 +28,9 @@ import java.util.Set;
  * <p> nat服务器 </p>
  */
 public class NatServer {
+    private static final String TAG = "NatServer";
     private final int port;
-    private final Observer observer;
+    private Observer observer;
 
     private DatagramChannel mBaseChannel;
     private DatagramChannel mBurrowChannel;
@@ -41,10 +46,12 @@ public class NatServer {
             mAcceptFlag = true;
             while (mAcceptFlag){
                 try {
-                    if (selector.select() == 0) {
+                    int select = selector.select(3 * 1000);
+                    if (select == 0) {
                         continue;
                     }
                     Set<SelectionKey> keys = selector.keys();
+                    Log.e(TAG,"receive run: "+keys.size());
 
                     for(SelectionKey key:keys){
                         Class<? extends SelectableChannel> channelClz = key.channel().getClass();
@@ -66,10 +73,7 @@ public class NatServer {
         this.observer = observer;
     }
 
-    public void launch(){
-        if (observer != null) {
-            observer.onLaunchStart();
-        }
+    public void launch() throws IOException {
         try {
             initChannel();
             launchProgress(Progress.CHANNEL_CREATED);
@@ -80,14 +84,12 @@ public class NatServer {
             launchProgress(Progress.CHANNEL_HANDLER_CREATED);
             TaskExecutors.exec(r);
             launchProgress(Progress.SERVER_LAUNCH);
-            if(observer != null){
-                observer.onLaunchComplete(true);
-            }
+            EventBus.subscribe(this);
         }catch (Exception e){
-            launchFail(e);
-            return;
+            throw e;
+        }finally {
+            NatUtil.close(mBaseChannel,mBurrowChannel);
         }
-        EventBus.subscribe(this);
     }
 
     private void initChannelHandler() {
@@ -98,7 +100,7 @@ public class NatServer {
     private void registerPacketHandler() {
         packetConsumer = new BasePacketConsumer(mBaseChannel);
         packetConsumer.setAndReturnNextPacketConsumer(
-                new BasePacketConsumer(mBurrowChannel));
+                new BurrowPacketConsumer(mBurrowChannel));
     }
 
     private void initSelector() throws IOException {
@@ -111,6 +113,7 @@ public class NatServer {
 
         mBaseChannel = DatagramChannel.open();
         mBaseChannel.socket().bind(new InetSocketAddress(port));
+        Log.e(TAG,"initChannel: "+port+", ");
         mBaseChannel.configureBlocking(false);
         mBurrowChannel = DatagramChannel.open();
         mBurrowChannel.configureBlocking(false);

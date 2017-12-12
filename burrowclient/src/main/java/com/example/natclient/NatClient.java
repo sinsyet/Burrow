@@ -115,7 +115,7 @@ public class NatClient implements IHandleObserver {
         obj.put("t",1);
         long mid = System.currentTimeMillis();
         obj.put("mid", mid);
-        obj.put("usn",usn);
+        // obj.put("usn",usn);
 
         try {
             sendMsg(obj.toString(),host,port);
@@ -134,7 +134,9 @@ public class NatClient implements IHandleObserver {
     }
 
     private void sendMsg(String msg,String host,int port) throws Exception {
-        channel.send(ByteBuffer.wrap(msg.getBytes("UTF-8")),new InetSocketAddress(host,port));
+        Log.e(TAG,"sendMsg: "+msg+" host: "+host+" port: "+port);
+        channel.send(ByteBuffer.wrap(msg.getBytes("UTF-8")),
+                new InetSocketAddress(host,port));
     }
 
     @Override

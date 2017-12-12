@@ -12,6 +12,7 @@ public class NatClient {
 
     public NatClient(){}
 
+    @Deprecated
     public NatClient(String host,
                      int port,
                      long activeStamp,
@@ -24,5 +25,28 @@ public class NatClient {
         this.tag = tag;
         this.usn = usn;
         this.isNating = isNating;
+    }
+
+    public NatClient(String host,
+                     int port,
+                     long activeStamp,
+                     String tag){
+        this.host = host;
+        this.port = port;
+        this.activeStamp = activeStamp;
+        this.tag = tag;
+    }
+
+    public void updateActiveStamp() {
+        this.activeStamp = System.currentTimeMillis();
+    }
+
+    @Override public String toString(){
+        return this.getClass().getSimpleName() + "@: [" +
+                "tag: " + this.tag +
+                "host: " + this.host +
+                "port: " + this.port +
+                "activeStamp: " + this.activeStamp +
+                "]";
     }
 }

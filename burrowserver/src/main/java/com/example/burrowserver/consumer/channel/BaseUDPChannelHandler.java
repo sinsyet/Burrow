@@ -1,5 +1,7 @@
 package com.example.burrowserver.consumer.channel;
 
+import com.alibaba.fastjson.JSONException;
+import com.alibaba.fastjson.JSONObject;
 import com.example.base.channel.abs.AbsUDPChannelHandlerImpl;
 import com.example.base.consumer.abs.AbsPacketConsumer;
 import com.example.base.domain.event.PacketEvent;
@@ -8,7 +10,6 @@ import com.example.utils.NatUtil;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
-import java.net.SocketAddress;
 import java.nio.ByteBuffer;
 import java.nio.channels.DatagramChannel;
 import java.nio.channels.SelectionKey;
@@ -29,13 +30,19 @@ public class BaseUDPChannelHandler extends AbsUDPChannelHandlerImpl {
                 String msg = NatUtil.getMsgByByteBuffer(buf, true);
                 String host = receive.getAddress().getHostAddress();
                 int port = receive.getPort();
-                postPacketEvent(
-                        new PacketEvent.Builder()
-                                .fromHost(host)
-                                .fromPort(port)
-                                .msg(msg)
-                                .build()
-                );
+                try {
+                    JSONObject jsonObject = JSONObject.parseObject(msg);
+                    Log.e(TAG,"onRead: "+jsonObject.toString());
+                    postPacketEvent(
+                            new PacketEvent.Builder()
+                                    .fromHost(host)
+                                    .fromPort(port)
+                                    .msg(jsonObject)
+                                    .build()
+                    );
+                }catch (JSONException e){
+                    throw e;
+                }
             } catch (IOException e) {
                 Log.e(TAG,"onRead fail : "+e.getMessage());
             }

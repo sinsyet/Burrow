@@ -1,6 +1,8 @@
 package com.example.utils;
 
 
+import java.io.Closeable;
+import java.io.IOException;
 import java.nio.ByteBuffer;
 
 import sun.misc.BASE64Encoder;
@@ -24,6 +26,17 @@ public class NatUtil {
         }
 
         return tag;
+    }
+
+    public static void close(Closeable...cls){
+        for(Closeable c:cls){
+            if(c != null){
+                try {
+                    c.close();
+                } catch (IOException ignored) {
+                }
+            }
+        }
     }
 
     private static BASE64Encoder base64Encoder = new BASE64Encoder();

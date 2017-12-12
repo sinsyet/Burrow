@@ -1,6 +1,8 @@
 package com.example.natclient;
 
+import com.example.natclient.bean.NatResponse;
 import com.example.natclient.fun.base.IFun;
+import com.example.natclient.fun.base.IRequestObserver;
 import com.example.utils.Log;
 import com.example.utils.ResourceUtil;
 
@@ -18,7 +20,7 @@ public class App {
         natClient.launch();
         natClient.registerServer(
                 ResourceUtil.get("usn"),
-                ResourceUtil.get("serverHost"),
+                ResourceUtil.get("serverHost")/*"255.255.255.255"*/,
                 Integer.parseInt(ResourceUtil.get("serverPort")),
                 resp -> Log.i(TAG,"onResponse: "+resp.toString()));
 
@@ -55,6 +57,13 @@ public class App {
             natClient.burrow(target, resp -> {
                Log.e(TAG,""+resp.toString());
             });
+        });
+
+        sFuns.put("register",() -> {
+           natClient.registerServer("",
+                   input("input host"),
+                   Integer.parseInt(input("input port")),
+                   resp -> Log.e(TAG,"onResponse: "+resp.toString()));
         });
     }
 }
