@@ -15,44 +15,47 @@ import java.util.Scanner;
 public class ServerHandler {
     private static final String TAG = "ServerHandler";
     private static final String PRE = "Server Status";
-    private static Map<String,Object> sServerStatus =
+    private static Map<String, Object> sServerStatus =
             new HashMap<>();
-    public static void updateStatus(String key,Object value){
+
+    public static void updateStatus(String key, Object value) {
         sServerStatus.put(key, value);
     }
 
-    public static Object getStatus(String key){
+    public static Object getStatus(String key) {
         return sServerStatus.get(key);
     }
 
-    public static void previewServerStatus(){
-        for(Map.Entry<String,Object> entry : sServerStatus.entrySet()){
+    public static void previewServerStatus() {
+        for (Map.Entry<String, Object> entry : sServerStatus.entrySet()) {
             String key = entry.getKey();
             Object value = entry.getValue();
 
-            if(value == null)
+            if (value == null)
                 Log.i(PRE, key + ": null");
-            else if(value.getClass().isArray())
-                Log.i(PRE, key + ": "+ Arrays.toString((Object[])value));
+            else if (value.getClass().isArray())
+                Log.i(PRE, key + ": " + Arrays.toString((Object[]) value));
             else
                 Log.i(PRE, key + ": " + value.toString());
         }
     }
+
     private NatServer server;
     private Scanner mScanner = new Scanner(System.in);
-    private Map<String,Fun1> mFuns = new HashMap<>();
-    public ServerHandler(NatServer server){
+    private Map<String, Fun1> mFuns = new HashMap<>();
+
+    public ServerHandler(NatServer server) {
         this.server = server;
     }
 
-    public void start(){
-        while (true){
+    public void start() {
+        while (true) {
             String command = ScannerUtil.input("input command");
             Fun1 fun1 = mFuns.get(command);
-            if(fun1 != null){
+            if (fun1 != null) {
                 fun1.run();
-            }else {
-                Log.i(TAG," no this command function: "+command);
+            } else {
+                Log.i(TAG, " no this command function: " + command);
             }
         }
     }
@@ -61,17 +64,17 @@ public class ServerHandler {
         mFuns.put("launch", new Fun1() {
             @Override
             public void run() {
-                if(getStatus(Status.SERVER_LAUNCH) != null){
-                    Log.e(TAG,"launch server function: " +
+                if (getStatus(Status.SERVER_LAUNCH) != null) {
+                    Log.e(TAG, "launch server function: " +
                             "server already launch");
                     return;
                 }
                 try {
                     server.launch();
-                    updateStatus(Status.SERVER_LAUNCH,true);
-                    Log.i(TAG,"server launch success");
+                    updateStatus(Status.SERVER_LAUNCH, true);
+                    Log.i(TAG, "server launch success");
                 } catch (IOException e) {
-                    Log.i(TAG,"server launch fail "+e.getMessage());
+                    Log.i(TAG, "server launch fail " + e.getMessage());
                 }
             }
         });
@@ -87,6 +90,25 @@ public class ServerHandler {
             @Override
             public void run() {
                 NatClientRepository.traverseNatClients();
+            }
+        });
+
+        mFuns.put("send base", () -> {
+            boolean b = server.sendMsgByChannel1(
+                    ScannerUtil.input("target host"),
+                    Integer.parseInt(ScannerUtil.input("target port")),
+                    ScannerUtil.input("input msg"));
+            Log.i(TAG, "send msg: " + (b ? "success" : "fail"));
+        });
+
+        mFuns.put("send burrow", new Fun1() {
+            @Override
+            public void run() {
+                boolean b = server.sendMsgByBurrowChannel(
+                        ScannerUtil.input("target host"),
+                        Integer.parseInt(ScannerUtil.input("target port")),
+                        ScannerUtil.input("input msg"));
+                Log.i(TAG, "send burrow msg: " + (b ? "success" : "fail"));
             }
         });
     }

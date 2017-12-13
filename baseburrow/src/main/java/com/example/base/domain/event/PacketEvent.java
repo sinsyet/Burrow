@@ -8,6 +8,7 @@ import com.alibaba.fastjson.JSONObject;
  * <p>报文事件</p>
  */
 public class PacketEvent {
+    public int t;
     public String fromHost;
     public int fromPort;
     public JSONObject msg;
@@ -16,6 +17,7 @@ public class PacketEvent {
         this.fromHost = builder.host;
         this.fromPort = builder.port;
         this.msg = builder.msg;
+        this.t = this.msg.getIntValue("t");
     }
     public static class Builder{
         private static final int INIT_HOST  = 1;

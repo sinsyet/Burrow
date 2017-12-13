@@ -4,7 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.example.eventbus.EventBus;
 import com.example.eventbus.bean.Event;
 import com.example.natclient.NatClient;
-import com.example.natclient.bean.BurrowEvent;
+import com.example.natclient.bean.ClientBurrowAction;
 import com.example.natclient.bean.Message;
 import com.example.natclient.fun.base.AbsBurrowHandler;
 
@@ -15,7 +15,7 @@ import com.example.natclient.fun.base.AbsBurrowHandler;
  */
 public class ConnectRemoteHandler extends AbsBurrowHandler {
     @Override
-    protected void handleBurrow(BurrowEvent action) {
+    protected void handleBurrow(ClientBurrowAction action) {
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("t",21);
         jsonObject.put("token",action.token);
@@ -32,7 +32,7 @@ public class ConnectRemoteHandler extends AbsBurrowHandler {
     }
 
     @Override
-    protected boolean dispatchBurrowAction(BurrowEvent action) {
-        return action.action == BurrowEvent.ACTION.CONNECT;
+    protected boolean dispatchBurrowAction(ClientBurrowAction action) {
+        return action.action == ClientBurrowAction.ACTION.CONNECT;
     }
 }

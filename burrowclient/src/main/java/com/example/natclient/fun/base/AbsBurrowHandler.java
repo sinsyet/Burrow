@@ -1,6 +1,6 @@
 package com.example.natclient.fun.base;
 
-import com.example.natclient.bean.BurrowEvent;
+import com.example.natclient.bean.ClientBurrowAction;
 
 /**
  * @author YGX
@@ -20,7 +20,7 @@ public abstract class AbsBurrowHandler {
         return this.mNextHandler;
     }
 
-    public void onBurrow(BurrowEvent action){
+    public void onBurrow(ClientBurrowAction action){
         if(dispatchBurrowAction(action)){
             handleBurrow(action);
         }else {
@@ -30,7 +30,7 @@ public abstract class AbsBurrowHandler {
         }
     }
 
-    protected abstract void handleBurrow(BurrowEvent action);
-    protected abstract boolean dispatchBurrowAction(BurrowEvent action);
+    protected abstract void handleBurrow(ClientBurrowAction action);
+    protected abstract boolean dispatchBurrowAction(ClientBurrowAction action);
 
 }

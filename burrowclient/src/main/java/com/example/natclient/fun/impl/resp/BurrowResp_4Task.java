@@ -3,7 +3,7 @@ package com.example.natclient.fun.impl.resp;
 import com.alibaba.fastjson.JSONObject;
 import com.example.engine.Handler;
 import com.example.natclient.app.Key;
-import com.example.natclient.bean.BurrowEvent;
+import com.example.natclient.bean.ClientBurrowAction;
 import com.example.natclient.fun.base.AbsTask;
 import com.example.natclient.fun.base.AbsUDPChannelHandler;
 import com.example.natclient.repository.Repository;
@@ -26,9 +26,9 @@ public class BurrowResp_4Task extends AbsTask {
     protected void onRunTask(JSONObject json) {
         JSONObject respJson = getRespJson(json);
         String token = json.getString("token");
-        BurrowEvent burrowAction = Repository.get(token);
+        ClientBurrowAction burrowAction = Repository.get(token);
         if (burrowAction == null) {
-            burrowAction = new BurrowEvent();
+            burrowAction = new ClientBurrowAction();
             JSONObject extra = json.getJSONObject("extra");
             burrowAction.host = extra.getString("host");
             burrowAction.port = extra.getIntValue("port");
@@ -38,7 +38,7 @@ public class BurrowResp_4Task extends AbsTask {
         respJson.put("code", Key.Code.OK);
         respJson.put("token",token);
         sendMsg(respJson.toString(),json.getString("host"),json.getIntValue("port"));
-        final BurrowEvent action = burrowAction;
+        final ClientBurrowAction action = burrowAction;
         Handler.post(new TimerTask() {
             @Override
             public void run() {

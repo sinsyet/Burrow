@@ -20,9 +20,10 @@ public class NatUtil {
 
     public static String generateTag(Object... params) {
         if (params.length == 0) throw new IllegalStateException("params length can't be 0");
+        int index = 0;
         String tag = "";
         for (Object s : params) {
-            tag += s.hashCode();
+            tag += Math.abs(s.hashCode() >> ++ index);
         }
 
         return tag;

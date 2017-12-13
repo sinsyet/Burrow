@@ -1,10 +1,13 @@
 package com.example.natclient.fun.impl.channelhandler;
 
 import com.alibaba.fastjson.JSONObject;
+import com.example.base.domain.event.PacketEvent;
+import com.example.base.task.abs.AbsUDPTask;
 import com.example.natclient.fun.base.AbsUDPChannelHandler;
 import com.example.natclient.fun.base.AbsTask;
 import com.example.natclient.fun.impl.task.BurrowRespTask;
 import com.example.natclient.fun.impl.task.BurrowTask;
+import com.example.natclient.fun.impl.task.GetClientTask;
 import com.example.natclient.fun.impl.task.PitpatTask;
 import com.example.natclient.fun.impl.task.RegisterTask;
 import com.example.utils.Log;
@@ -24,19 +27,18 @@ import java.util.Map;
  * 基本处理类
  */
 
-public class BaseHandlerImpl extends AbsUDPChannelHandler {
-    private static final String TAG = "BaseHandlerImpl";
+public class BaseUDPHandlerImpl extends AbsUDPChannelHandler {
+    private static final String TAG = "BaseUDPHandlerImpl";
 
     private ByteBuffer byteBuffer = ByteBuffer.allocate(1024);
-    private Map<Integer,AbsTask> mTasks = new HashMap<>();
+    private Map<Integer,AbsUDPTask> mTasks = new HashMap<>();
     {
-        mTasks.put(-1,new RegisterTask(this));
-        mTasks.put(-2,new PitpatTask(this));
-        mTasks.put(10,new BurrowTask(this,getChannel()));
-        mTasks.put(12,new BurrowRespTask(this));
+        mTasks.put(-1,new RegisterTask(getChannel()));
+        mTasks.put(-2,new PitpatTask(getChannel()));
+        mTasks.put(-3,new GetClientTask(getChannel()));
     }
 
-    public BaseHandlerImpl(DatagramChannel channel) {
+    public BaseUDPHandlerImpl(DatagramChannel channel) {
         super(channel);
     }
 
@@ -48,15 +50,15 @@ public class BaseHandlerImpl extends AbsUDPChannelHandler {
             String host = server.getAddress().getHostAddress();
             int port = server.getPort();
             String msg = NatUtil.getMsgByByteBuffer(byteBuffer, true);
-            Log.e(TAG,"receive msg: "+msg);
             JSONObject jsonObject = JSONObject.parseObject(msg);
-            jsonObject.put("host",host);
-            jsonObject.put("port",port);
             int t = jsonObject.getIntValue("t");
             jsonObject.put("t",t);
-            AbsTask absTask = mTasks.get(t);
+            AbsUDPTask absTask = mTasks.get(t);
             if(absTask != null) {
-                absTask.runTask(jsonObject);
+                absTask.handle(new PacketEvent.Builder()
+                        .fromHost(host)
+                        .fromPort(port)
+                        .msg(jsonObject).build());
             }else {
                 throw new NullPointerException(" don't support this type: "+t);
             }

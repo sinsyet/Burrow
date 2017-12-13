@@ -14,6 +14,7 @@ import com.example.natclient.bean.Message;
  * 任务
  */
 
+@Deprecated
 public abstract class AbsTask {
 
     protected AbsUDPChannelHandler handler;

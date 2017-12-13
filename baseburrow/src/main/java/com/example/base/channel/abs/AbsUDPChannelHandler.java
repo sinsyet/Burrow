@@ -16,10 +16,10 @@ import java.util.Set;
  *
  * <p>UDP channel只需要处理read operation即可</p>
  */
-public abstract class AbsUDPChannelHandlerImpl implements IChannelHandler {
+public abstract class AbsUDPChannelHandler implements IChannelHandler {
     protected AbsPacketConsumer consumer;
-    private static final String TAG = "AbsUDPChannelHandlerImpl";
-    public AbsUDPChannelHandlerImpl(AbsPacketConsumer consumer){
+    private static final String TAG = "AbsUDPChannelHandler";
+    public AbsUDPChannelHandler(AbsPacketConsumer consumer){
         this.consumer = consumer;
     }
     @Override

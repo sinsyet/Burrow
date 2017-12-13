@@ -5,17 +5,15 @@ import com.example.engine.TaskExecutors;
 import com.example.eventbus.EventBus;
 import com.example.eventbus.anno.Subscribe;
 import com.example.natclient.app.Key;
-import com.example.natclient.bean.BurrowEvent;
+import com.example.natclient.bean.ClientBurrowAction;
 import com.example.natclient.bean.Message;
 import com.example.natclient.bean.NatResponse;
 import com.example.natclient.engine.RequestQueue;
-import com.example.natclient.fun.base.AbsBurrowHandler;
-import com.example.natclient.fun.base.IHandleObserver;
 import com.example.natclient.fun.base.IRequestObserver;
 import com.example.natclient.fun.base.IChannelHandler;
-import com.example.natclient.fun.impl.burrowhandler.ConnectRemoteHandler;
-import com.example.natclient.fun.impl.channelhandler.BaseHandlerImpl;
+import com.example.natclient.fun.impl.channelhandler.BaseUDPHandlerImpl;
 import com.example.natclient.fun.impl.channelhandler.InitiativeBurrowHandlerImpl;
+import com.example.natclient.repository.BurrowActionRepository;
 import com.example.natclient.repository.ChannelRepository;
 import com.example.utils.Log;
 
@@ -33,13 +31,13 @@ import java.util.TimerTask;
  *
  * @author YGX
  *
- * 客户端
+ * <p> nat 客户端 </p>
  */
-public class NatClient implements IHandleObserver {
+public class NatClient {
     private static final String TAG = "NatClient";
+    private DatagramChannel mClientBaseChannel;
     private IChannelHandler handler;
     private Selector selector;
-    private DatagramChannel channel;
 
     private String msg;
     private String host;
@@ -51,7 +49,6 @@ public class NatClient implements IHandleObserver {
             try {
                 JSONObject pitpat = new JSONObject();
                 pitpat.put("t",2);
-                // pitpat.put("mid",System.currentTimeMillis());
                 pitpat.put("tag",tag);
                 msg = pitpat.toString();
                 sendMsg(msg,host,port);
@@ -64,12 +61,11 @@ public class NatClient implements IHandleObserver {
 
 
     public NatClient() throws IOException {
-        channel = DatagramChannel.open();
+        mClientBaseChannel = DatagramChannel.open();
         selector = Selector.open();
-        handler = new BaseHandlerImpl(channel);
-        channel.configureBlocking(false);
-        handler.setHandleObserver(this);
-        channel.register(selector, SelectionKey.OP_READ);
+        handler = new BaseUDPHandlerImpl(mClientBaseChannel);
+        mClientBaseChannel.configureBlocking(false);
+        mClientBaseChannel.register(selector, SelectionKey.OP_READ);
         EventBus.subscribe(this);
     }
 
@@ -134,30 +130,30 @@ public class NatClient implements IHandleObserver {
     }
 
     private void sendMsg(String msg,String host,int port) throws Exception {
-        Log.e(TAG,"sendMsg: "+msg+" host: "+host+" port: "+port);
-        channel.send(ByteBuffer.wrap(msg.getBytes("UTF-8")),
+        mClientBaseChannel.send(ByteBuffer.wrap(msg.getBytes("UTF-8")),
                 new InetSocketAddress(host,port));
     }
 
-    @Override
-    public void onPitpat(String tag, String host, int port) {
+    @Subscribe(JSONObject.class)
+    void onRegistered(JSONObject obj) {
 
-    }
-
-    @Override
-    public void onRegistered(String tag, String host, int port) {
-        Log.i(TAG,"onRegistered: tag:"+tag+" host: "+host+" port:"+port);
-        this.tag = tag;
+        this.tag = obj.getString("tag");
+        this.host = obj.getString("host");
+        this.port = obj.getIntValue("port");
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("t",2);
         jsonObject.put("mid",System.currentTimeMillis());
         jsonObject.put("tag", tag);
-
         this.msg = jsonObject.toString();
-        this.host = host;
-        this.port = port;
         // 第一次是10秒后发起心跳, 然后每隔60秒发一次心跳
         mTimer.schedule(mPitpatTask,10 * 1000, 60 * 1000);
+    }
+
+    @Subscribe(String.class)
+    void onClientBurrowAction(String token){
+        ClientBurrowAction burrowEvent = BurrowActionRepository.getBurrowEvent(token);
+        if(burrowEvent == null) return;
+
     }
 
     public void getClient(IRequestObserver observer) {
@@ -165,7 +161,9 @@ public class NatClient implements IHandleObserver {
         jsonObject.put("t",3);
         long mid = System.currentTimeMillis();
         jsonObject.put("mid", mid);
-        jsonObject.put("tag",tag);
+        JSONObject params = new JSONObject();
+        params.put("tag",tag);
+        jsonObject.put("params",params);
         try {
             sendMsg(jsonObject.toString(),host,port);
             RequestQueue.put(mid,observer);
@@ -213,24 +211,14 @@ public class NatClient implements IHandleObserver {
         return datagramChannel;
     }
 
-    private AbsBurrowHandler mBurrowHandler;
-    private void initBurrowHandler(){
-        mBurrowHandler = new ConnectRemoteHandler();
-    }
-
     @Subscribe(Message.class)
     public void sendMsg(Message msg){
         try {
-            channel.send(
+            mClientBaseChannel.send(
                     ByteBuffer.wrap(msg.msg.getBytes("UTF-8")),
                     new InetSocketAddress(msg.host,msg.port));
         } catch (IOException e) {
 
         }
-    }
-
-    @Subscribe(Message.class)
-    public void onBurrowEventCreate(BurrowEvent event){
-        mBurrowHandler.onBurrow(event);
     }
 }

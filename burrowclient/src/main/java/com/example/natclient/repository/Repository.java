@@ -1,23 +1,23 @@
 package com.example.natclient.repository;
 
-import com.example.natclient.bean.BurrowEvent;
+import com.example.natclient.bean.ClientBurrowAction;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public class Repository {
 
-    private static Map<String,BurrowEvent> sBurrowActions = new HashMap<>();
+    private static Map<String,ClientBurrowAction> sBurrowActions = new HashMap<>();
 
     public static boolean containBurrowAction(String token){
         return sBurrowActions.containsKey(token);
     }
 
-    public static void put(String key,BurrowEvent burrowAction){
+    public static void put(String key,ClientBurrowAction burrowAction){
         sBurrowActions.put(key, burrowAction);
     }
 
-    public static BurrowEvent get(String key){
+    public static ClientBurrowAction get(String key){
         return sBurrowActions.get(key);
     }
 }

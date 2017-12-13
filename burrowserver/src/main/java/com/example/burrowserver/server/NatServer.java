@@ -2,21 +2,28 @@ package com.example.burrowserver.server;
 
 import com.example.base.channel.ifun.IChannelHandler;
 import com.example.base.consumer.abs.AbsPacketConsumer;
+import com.example.burrowserver.bean.BurrowAction;
 import com.example.burrowserver.consumer.channel.BaseUDPChannelHandler;
 import com.example.burrowserver.consumer.packet.BasePacketConsumer;
 import com.example.burrowserver.consumer.packet.BurrowPacketConsumer;
+import com.example.burrowserver.engine.repository.BurrowActionRepository;
 import com.example.engine.TaskExecutors;
 import com.example.eventbus.EventBus;
+import com.example.eventbus.anno.Subscribe;
 import com.example.utils.Log;
 import com.example.utils.NatUtil;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
+import java.nio.ByteBuffer;
 import java.nio.channels.DatagramChannel;
 import java.nio.channels.SelectableChannel;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
+import java.nio.channels.ServerSocketChannel;
+import java.nio.channels.SocketChannel;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -50,12 +57,10 @@ public class NatServer {
                     if (select == 0) {
                         continue;
                     }
-                    Set<SelectionKey> keys = selector.keys();
-                    Log.e(TAG,"receive run: "+keys.size());
-
+                    Set<SelectionKey> keys = selector.selectedKeys();
+                    // notices, 不要用selector.keys(); 来接收key
                     for(SelectionKey key:keys){
-                        Class<? extends SelectableChannel> channelClz = key.channel().getClass();
-                        IChannelHandler iChannelHandler = mChannelHandlerMap.get(channelClz);
+                        IChannelHandler iChannelHandler = mChannelHandlerMap.get(getChannelKey(key.channel()));
                         if(iChannelHandler != null){
                             iChannelHandler.onSelect(key);
                         }
@@ -73,6 +78,37 @@ public class NatServer {
         this.observer = observer;
     }
 
+    public boolean sendMsgByChannel1(String host,int port,String msg){
+        try {
+            sendMsg(mBaseChannel,msg,host,port);
+            return true;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public boolean sendMsgByBurrowChannel(String host,int port,String msg){
+        try {
+            sendMsg(mBurrowChannel,msg,host,port);
+            return true;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    private Class<? extends SelectableChannel> getChannelKey(SelectableChannel channel){
+        if(channel instanceof DatagramChannel) return DatagramChannel.class;
+        if(channel instanceof SocketChannel) return SocketChannel.class;
+        if(channel instanceof ServerSocketChannel) return ServerSocketChannel.class;
+
+        return null;
+    }
+    private void sendMsg(DatagramChannel channel,String msg,String host,int port) throws IOException {
+        channel.send(ByteBuffer.wrap(msg.getBytes("UTF-8")),new InetSocketAddress(host,port));
+    }
+
     public void launch() throws IOException {
         try {
             initChannel();
@@ -86,9 +122,8 @@ public class NatServer {
             launchProgress(Progress.SERVER_LAUNCH);
             EventBus.subscribe(this);
         }catch (Exception e){
+            // NatUtil.close(mBaseChannel,mBurrowChannel);
             throw e;
-        }finally {
-            NatUtil.close(mBaseChannel,mBurrowChannel);
         }
     }
 
@@ -117,6 +152,17 @@ public class NatServer {
         mBaseChannel.configureBlocking(false);
         mBurrowChannel = DatagramChannel.open();
         mBurrowChannel.configureBlocking(false);
+    }
+
+    @Subscribe(String.class)
+    void onBurrowAction(String token){
+        BurrowAction burrowAction = BurrowActionRepository.getBurrowAction(token);
+        if(burrowAction == null) return;
+        try {
+            burrowAction.launch(mBurrowChannel);
+        } catch (IOException e) {
+
+        }
     }
 
     private void launchProgress(int progress){

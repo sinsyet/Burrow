@@ -4,6 +4,7 @@ dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     compile 'com.alibaba:fastjson:1.2.41'
     compile project(':jutilslib')
+    compile project(path: ':baseburrow')
 }
 
 sourceCompatibility = "1.8"

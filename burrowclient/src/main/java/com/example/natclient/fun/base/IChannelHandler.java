@@ -18,8 +18,4 @@ public interface IChannelHandler {
     void onWrite(SelectionKey key);
 
     void onConnect(SelectionKey key);
-
-    void setHandleObserver(IHandleObserver observer);
-
-
 }

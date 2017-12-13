@@ -9,6 +9,7 @@ public class NatClient {
     public String       tag;
     public String       usn;
     public boolean      isNating;
+    public int          burrowPort;     // 打洞专业端口,
 
     public NatClient(){}
 

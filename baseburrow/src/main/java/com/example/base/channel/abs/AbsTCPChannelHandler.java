@@ -12,8 +12,8 @@ import java.nio.channels.SelectionKey;
  *
  * <p> 预留< /p>
  */
-public abstract class AbsTCPChannelHandlerImpl implements IChannelHandler {
-    private static final String TAG = "AbsTCPChannelHandlerImpl";
+public abstract class AbsTCPChannelHandler implements IChannelHandler {
+    private static final String TAG = "AbsTCPChannelHandler";
     @Override
     public void onSelect(SelectionKey key) {
             int ops = key.interestOps();

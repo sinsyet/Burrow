@@ -1,6 +1,11 @@
 package com.example.natclient.bean;
 
-public class BurrowEvent {
+/**
+ * @author YGX
+ *
+ * <p> 客户端打洞行为 </p>
+ */
+public class ClientBurrowAction {
 
     public String host;
     public int port;
@@ -8,8 +13,24 @@ public class BurrowEvent {
     public long action;
     public long activeStamp;
 
+    public ClientBurrowAction(){}
+    public ClientBurrowAction(String rHost, int rPort, String token){
+        this.host = rHost;
+        this.port = rPort;
+        this.token = token;
+        this.action = ACTION.RESPONSE;
+        updateActiveStamp();
+    }
+
+    public String getToken(){
+        return this.token;
+    }
+
     public void updateActiveStamp(){
         this.activeStamp = System.currentTimeMillis();
+    }
+    public void updateAction(int action){
+        this.action = action;
     }
     public interface ACTION{
         int REQUEST 		= 1;	 // 客户端请求NAT打洞

@@ -1,72 +1,53 @@
 package com.example.natclient.fun.impl.task;
 
 import com.alibaba.fastjson.JSONObject;
-import com.example.engine.Handler;
-import com.example.natclient.app.Key;
-import com.example.natclient.bean.BurrowEvent;
-import com.example.natclient.fun.base.AbsUDPChannelHandler;
-import com.example.natclient.fun.base.AbsTask;
-import com.example.natclient.repository.Repository;
+import com.example.base.domain.event.PacketEvent;
+import com.example.base.task.abs.AbsUDPTask;
+import com.example.eventbus.EventBus;
+import com.example.eventbus.bean.Event;
+import com.example.natclient.NatClient;
+import com.example.natclient.bean.ClientBurrowAction;
+import com.example.natclient.repository.BurrowActionRepository;
 
-import java.io.IOException;
-import java.net.InetSocketAddress;
-import java.nio.ByteBuffer;
 import java.nio.channels.DatagramChannel;
-import java.util.TimerTask;
 
 /**
  * @author YGX
  *
- * 接收到打洞请求时执行的任务,
+ * <p> 作为被叫接收到打洞请求的时候 </p>
  *
- * 处理逻辑就是将准备打洞使用的端口返回给服务器,
- * 注意, 只返回端口, ip或主机由服务器去获取, 因为客户端获取到的只是局域网的ip;
- * 服务器才能获取到公网ip;
+ * 处理逻辑就是使用准备打洞使用的udp channel发送数据给服务端,
+ * 以便使服务端获取到被叫用于打洞的channel的公网ip和映射端口
  */
-public class BurrowTask extends AbsTask {
-    private final DatagramChannel channel;
+public class BurrowTask extends AbsUDPTask {
 
-    public BurrowTask(AbsUDPChannelHandler handler, DatagramChannel channel) {
-        super(handler);
-        this.channel = channel;
+    public BurrowTask(DatagramChannel channel) {
+        super(channel);
     }
 
     @Override
-    protected void onRunTask(JSONObject json) {
-        JSONObject respJson = getRespJson(json);
-        String token = json.getString("token");
-        BurrowEvent burrowAction = Repository.get(token);
-        if (burrowAction == null) {
-            burrowAction = new BurrowEvent();
-            JSONObject extra = json.getJSONObject("extra");
-            burrowAction.host = extra.getString("host");
-            burrowAction.port = extra.getIntValue("port");
-            burrowAction.token = token;
-            Repository.put(token,burrowAction);
-        }
-        respJson.put("code", Key.Code.OK);
-        respJson.put("token",token);
-        sendMsg(respJson.toString(),json.getString("host"),json.getIntValue("port"));
-        final BurrowEvent action = burrowAction;
-        Handler.post(new TimerTask() {
-            @Override
-            public void run() {
-                JSONObject sayHi = new JSONObject();
-                sayHi.put("t",22);
-                sayHi.put("mid",System.currentTimeMillis());
-                JSONObject extra2 = new JSONObject();
-                extra2.put("msg","Hi, zhujiao");
-                sayHi.put("extra",extra2);
-                sendMsg(sayHi.toString(),action.host,action.port);
-            }
-        },500);
+    protected void handlePacket(PacketEvent event) {
+        JSONObject msg = event.msg;
+        JSONObject params = msg.getJSONObject("params");
+        String host = getStringParam(params, "host");
+        String token = getStringParam(params, "token");
+        int port = getIntParam(params, "port");
+
+        ClientBurrowAction burrowEvent = new ClientBurrowAction(host,port,token);
+        BurrowActionRepository.put(burrowEvent.getToken(),burrowEvent);
+        EventBus.post(
+                new Event.Builder()
+                        .to(NatClient.class)
+                        .obj(burrowEvent.getToken())
+                        .build()
+        );
     }
 
-    @Override
-    protected void sendMsg(String msg, String host, int port) {
-        try {
-            channel.send(ByteBuffer.wrap(msg.getBytes("UTF-8")),new InetSocketAddress(host,port));
-        } catch (IOException e) {
-        }
+    private String getStringParam(JSONObject param, String key){
+        return param.getString(key);
+    }
+
+    private int getIntParam(JSONObject param, String key){
+        return param.getIntValue(key);
     }
 }

@@ -8,6 +8,7 @@ import com.example.base.task.abs.AbsUDPTask;
 import com.example.burrowserver.engine.repository.NatClientRepository;
 
 import java.nio.channels.DatagramChannel;
+import java.util.HashSet;
 import java.util.Set;
 
 /**
@@ -33,8 +34,10 @@ public class GetClientsTask extends AbsUDPTask {
         }
 
         Set<String> activeTags = NatClientRepository.getActiveTags();
+        HashSet<String> tags = new HashSet<>(activeTags);
+        tags.remove(paramTag);
         JSONObject extra = new JSONObject();
-        extra.put("tags",activeTags);
+        extra.put("tags",tags);
         extra.getJSONArray("tags").remove(paramTag);
         baseResp.put("extra",extra);
 

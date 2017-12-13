@@ -4,6 +4,8 @@ import com.example.base.domain.event.PacketEvent;
 
 import java.nio.channels.DatagramChannel;
 
+import javax.xml.crypto.Data;
+
 /**
  * @author YGX
  *
@@ -44,6 +46,9 @@ public abstract class AbsPacketConsumer {
         }
     }
 
+    protected DatagramChannel getChannel(){
+        return udpChannel;
+    }
     protected abstract boolean canConsume(PacketEvent event);
     protected abstract void consumePacket(PacketEvent event);
 }

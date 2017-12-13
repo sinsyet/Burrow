@@ -23,9 +23,4 @@ public class AbsTCPChannelHandler implements IChannelHandler {
     public void onConnect(SelectionKey key) {
 
     }
-
-    @Override
-    public void setHandleObserver(IHandleObserver observer) {
-
-    }
 }

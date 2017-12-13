@@ -4,14 +4,14 @@ import java.nio.channels.DatagramChannel;
 import java.nio.channels.SelectionKey;
 
 /**
- *
  * @author YGX
+ *
+ * use {@link com.example.base.channel.abs.AbsUDPChannelHandler} instead;
  */
-
-public abstract class AbsUDPChannelHandler implements IChannelHandler,IHandleObserver {
+@Deprecated
+public abstract class AbsUDPChannelHandler implements IChannelHandler {
 
     private DatagramChannel channel;
-    private IHandleObserver observer;
 
     public AbsUDPChannelHandler(DatagramChannel channel){
         this.channel = channel;
@@ -19,25 +19,6 @@ public abstract class AbsUDPChannelHandler implements IChannelHandler,IHandleObs
 
     protected DatagramChannel getChannel() {
         return channel;
-    }
-
-    @Override
-    public void setHandleObserver(IHandleObserver observer){
-        this.observer = observer;
-    }
-
-    @Override
-    public void onPitpat(String tag,String host,int port){
-        if (observer != null) {
-            observer.onPitpat(tag, host, port);
-        }
-    }
-
-    @Override
-    public void onRegistered(String tag, String host, int port) {
-        if (observer != null) {
-            observer.onRegistered(tag, host, port);
-        }
     }
 
     @Override

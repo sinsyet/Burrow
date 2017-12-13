@@ -18,6 +18,10 @@ public class NatClientRepository {
         sClientMap.put(key, client);
     }
 
+    public static NatClient getNatClient(String tag){
+        return sClientMap.get(tag);
+    }
+
     public static boolean containsTag(String tag){
         if(tag == null) return false;
         return sClientMap.containsKey(tag);

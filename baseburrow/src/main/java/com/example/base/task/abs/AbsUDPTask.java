@@ -83,6 +83,6 @@ public abstract class AbsUDPTask implements ITask<PacketEvent> {
         resp.put("em",em);
         return resp;
     }
-    protected abstract void handlePacket(PacketEvent event);
 
+    protected abstract void handlePacket(PacketEvent event);
 }

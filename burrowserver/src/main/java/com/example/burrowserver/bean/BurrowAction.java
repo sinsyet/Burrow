@@ -1,6 +1,7 @@
 package com.example.burrowserver.bean;
 
 import com.alibaba.fastjson.JSONObject;
+import com.example.base.key.Key;
 import com.example.burrowserver.engine.repository.Repository;
 import com.example.utils.NatUtil;
 
@@ -31,26 +32,25 @@ public class BurrowAction {
      * @return 打洞token
      */
     public String getBurrowToken(){
-        String localTag = NatUtil.generateTag(local.host, local.port);
-        String remoteTag = NatUtil.generateTag(remote.host, remote.port);
-        return NatUtil.generateTag(localTag,remoteTag);
+        return NatUtil.base64Encode(local.host,local.burrowPort,
+                remote.host);
     }
 
     public void launch(DatagramChannel channel) throws IOException {
         JSONObject jsonObject = new JSONObject();
-        jsonObject.put("t",10);
+        jsonObject.put("t", Key.T.REQ_51);
         long mid = System.currentTimeMillis();
         jsonObject.put("mid", mid);
-        // jsonObject.put("mid",System.currentTimeMillis());
+        jsonObject.put("token",getBurrowToken());
         JSONObject extra = new JSONObject();
-        extra.put("token",getBurrowToken());
         extra.put("host",local.host);
-        extra.put("port",local.port);
+        extra.put("ltag",local.tag);
+        extra.put("port",local.burrowPort);
         jsonObject.put("extra",extra);
 
         channel.send(
                 ByteBuffer.wrap(jsonObject.toString().getBytes("UTF-8")),
                 new InetSocketAddress(remote.host,remote.port));
-        Repository.put(getBurrowToken(),this);
+
     }
 }
