@@ -14,6 +14,7 @@ public class BurrowAction {
     private NatClient local;
     private NatClient remote;
     private long activeStamp;
+    private int actionStep;
 
     public NatClient getLocal(){ return local;}
 
@@ -21,6 +22,13 @@ public class BurrowAction {
         return remote;
     }
 
+    public int getActionStep(){
+        return actionStep;
+    }
+
+    public void setActionStep(int step){
+        this.actionStep = step;
+    }
     public BurrowAction(NatClient local, NatClient remote){
         this.local = local;
         this.remote = remote;
@@ -46,11 +54,16 @@ public class BurrowAction {
         extra.put("host",local.host);
         extra.put("ltag",local.tag);
         extra.put("port",local.burrowPort);
-        jsonObject.put("extra",extra);
+        jsonObject.put("params",extra);
 
         channel.send(
                 ByteBuffer.wrap(jsonObject.toString().getBytes("UTF-8")),
                 new InetSocketAddress(remote.host,remote.port));
 
+    }
+
+    public interface Step{
+        int CREATE      = 51;
+        int RESP        = 52;
     }
 }

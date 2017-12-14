@@ -5,22 +5,23 @@ import com.example.base.domain.event.PacketEvent;
 import com.example.base.key.Key;
 import com.example.base.task.abs.AbsUDPTask;
 import com.example.natclient.consumer.task.Burrow102Task;
+import com.example.natclient.consumer.task.Resp_102Task;
+import com.example.natclient.consumer.task.Resp_4Task;
 import com.example.natclient.fun.impl.task.BurrowTask;
-import com.example.natclient.fun.impl.task.GetClientTask;
-import com.example.natclient.fun.impl.task.PitpatTask;
-import com.example.natclient.fun.impl.task.RegisterTask;
+import com.example.utils.Log;
 
 import java.nio.channels.DatagramChannel;
 import java.util.HashMap;
 import java.util.Map;
 
-public class BurrowPacketConsumer extends AbsPacketConsumer {
+public class BurrowReqPacketConsumer extends AbsPacketConsumer {
+    private static final String TAG = "BurrowReqPacketConsumer";
     private Map<Integer,AbsUDPTask> mTasks = new HashMap<>();
     {
-        mTasks.put(Key.T.REQ_51,new BurrowTask(getChannel()));
-        mTasks.put(Key.T.REQ_102,new Burrow102Task(getChannel()));
+        mTasks.put(- Key.T.REQ_102,new Resp_102Task(getChannel()));
+        mTasks.put(- Key.T.REQ_BURROW,new Resp_4Task(getChannel()));
     }
-    public BurrowPacketConsumer(DatagramChannel udpChannel) {
+    public BurrowReqPacketConsumer(DatagramChannel udpChannel) {
         super(udpChannel);
     }
 
@@ -32,7 +33,7 @@ public class BurrowPacketConsumer extends AbsPacketConsumer {
     @Override
     protected void consumePacket(PacketEvent event) {
         AbsUDPTask absUDPTask = mTasks.get(event.t);
-        if(absUDPTask != null){
+        if (absUDPTask != null) {
             absUDPTask.handle(event);
         }
     }

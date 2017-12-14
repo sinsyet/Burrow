@@ -10,6 +10,7 @@ public class NatClient {
     public String       usn;
     public boolean      isNating;
     public int          burrowPort;     // 打洞专业端口,
+    private ThreadLocal<Object> mTl = new ThreadLocal<>();
 
     public NatClient(){}
 
@@ -36,6 +37,16 @@ public class NatClient {
         this.port = port;
         this.activeStamp = activeStamp;
         this.tag = tag;
+    }
+
+    public void setTag(Object obj){
+        mTl.set(obj);
+    }
+
+    public Object getTag(){
+        Object o = mTl.get();
+        mTl.remove();
+        return o;
     }
 
     public void updateActiveStamp() {

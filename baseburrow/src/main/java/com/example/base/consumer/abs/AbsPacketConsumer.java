@@ -18,12 +18,16 @@ public abstract class AbsPacketConsumer {
         this.udpChannel = udpChannel;
     }
 
-    public AbsPacketConsumer setAndReturnNextPacketConsumer(AbsPacketConsumer next){
+    public AbsPacketConsumer setNextPacketConsumer(AbsPacketConsumer next){
         if(next == null)
             throw new IllegalStateException(
                     "next packet consumer can't be null");
-        this.mNext = next;
-        return next;
+        if(this.mNext == null){
+            this.mNext = next;
+        }else{
+            this.mNext.setNextPacketConsumer(next);
+        }
+        return this;
     }
 
     public AbsPacketConsumer deletePacketConsumer(AbsPacketConsumer deleteConsumer){
@@ -46,7 +50,7 @@ public abstract class AbsPacketConsumer {
         }
     }
 
-    protected DatagramChannel getChannel(){
+    public DatagramChannel getChannel(){
         return udpChannel;
     }
     protected abstract boolean canConsume(PacketEvent event);

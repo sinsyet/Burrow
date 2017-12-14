@@ -2,7 +2,9 @@ package com.example.burrowserver.consumer.packet;
 
 import com.example.base.consumer.abs.AbsPacketConsumer;
 import com.example.base.domain.event.PacketEvent;
+import com.example.base.key.Key;
 import com.example.base.task.abs.AbsUDPTask;
+import com.example.burrowserver.consumer.task.BurrowTask;
 import com.example.burrowserver.consumer.task.GetClientsTask;
 import com.example.burrowserver.consumer.task.PitpatTask;
 import com.example.burrowserver.consumer.task.RegisterTask;
@@ -19,9 +21,10 @@ import java.util.Map;
 public class BasePacketConsumer extends AbsPacketConsumer {
     private Map<Integer,AbsUDPTask> mTasks = new HashMap<>();
     {
-        mTasks.put(1,new RegisterTask(udpChannel));
-        mTasks.put(2,new PitpatTask(udpChannel));
-        mTasks.put(3,new GetClientsTask(udpChannel));
+        mTasks.put(Key.T.REQ_REGISTER,new RegisterTask(udpChannel));
+        mTasks.put(Key.T.REQ_PITPAT,new PitpatTask(udpChannel));
+        mTasks.put(Key.T.REQ_GET_CLIENTS,new GetClientsTask(udpChannel));
+        mTasks.put(Key.T.REQ_BURROW,new BurrowTask(udpChannel));
     }
     public BasePacketConsumer(DatagramChannel udpChannel) {
         super(udpChannel);

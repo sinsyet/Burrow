@@ -1,4 +1,4 @@
-package com.example.natclient.fun.impl.task;
+package com.example.natclient.consumer.task;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
@@ -6,8 +6,6 @@ import com.example.base.domain.event.PacketEvent;
 import com.example.base.task.abs.AbsUDPTask;
 import com.example.natclient.bean.NatResponse;
 import com.example.natclient.engine.RequestQueue;
-import com.example.natclient.fun.base.AbsUDPChannelHandler;
-import com.example.natclient.fun.base.AbsTask;
 import com.example.natclient.fun.base.IRequestObserver;
 
 import java.nio.channels.DatagramChannel;
@@ -36,8 +34,8 @@ public class GetClientTask extends AbsUDPTask {
         int code = json.getIntValue("code");
         NatResponse resp;
         if(code == 200){
-            JSONObject result = json.getJSONObject("extra");
-            JSONArray tags = result.getJSONArray("tags");
+            JSONObject result = json.getJSONObject("result");
+            JSONArray nats = result.getJSONArray("nats");
             resp = new NatResponse.Builder()
                     .code(200)
                     .success(true)

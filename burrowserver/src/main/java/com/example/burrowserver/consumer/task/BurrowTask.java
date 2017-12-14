@@ -12,11 +12,13 @@ import com.example.burrowserver.server.NatServer;
 import com.example.engine.Handler;
 import com.example.eventbus.EventBus;
 import com.example.eventbus.bean.Event;
+import com.example.utils.Log;
 
 import java.nio.channels.DatagramChannel;
 import java.util.TimerTask;
 
 public class BurrowTask extends AbsUDPTask {
+    private static final String TAG = "BurrowTask";
     public BurrowTask(DatagramChannel channel) {
         super(channel);
     }
@@ -25,8 +27,9 @@ public class BurrowTask extends AbsUDPTask {
     protected void handlePacket(PacketEvent event) {
         JSONObject reqJson = event.msg;
         JSONObject baseResp = getRespJSONObjectBase(reqJson);
-        String tag = getStringParam(reqJson, "tag");
-        String rtag = getStringParam(reqJson, "rtag");
+        JSONObject params = reqJson.getJSONObject("params");
+        String tag = getStringParam(params, "tag");
+        String rtag = getStringParam(params, "rtag");
 
         if (!NatClientRepository.containsTag(tag)) {
             stuffFailureResp(baseResp, Key.Code.NO_LTAG,Key.Em.NO_LTAG);
@@ -45,6 +48,7 @@ public class BurrowTask extends AbsUDPTask {
 
         BurrowAction burrowAction = new BurrowAction(local, remote);
         final String token = burrowAction.getBurrowToken();
+        burrowAction.setActionStep(BurrowAction.Step.CREATE);
         BurrowActionRepository.put(token,burrowAction);
         JSONObject extra = new JSONObject();
         extra.put("token",token);
@@ -52,6 +56,7 @@ public class BurrowTask extends AbsUDPTask {
         stuffAndSendSuccessResp(baseResp,
                 event.fromHost,
                 event.fromPort);
+        Log.e(TAG,"handlePacket: "+baseResp.toString());
         Handler.post(new TimerTask() {
             @Override
             public void run() {

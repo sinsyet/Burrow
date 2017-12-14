@@ -50,8 +50,9 @@ public class EventBus {
 
     private static void findMethod2Post(Object toObj,Object paramObj){
         Class<?> clz = toObj.getClass();
-        Method[] methods = clz.getMethods();
+        Method[] methods = clz.getDeclaredMethods();
         for(Method m:methods){
+            m.setAccessible(true);
             Subscribe annotationAnno = m.getAnnotation(Subscribe.class);
             if(annotationAnno == null){
                 continue;

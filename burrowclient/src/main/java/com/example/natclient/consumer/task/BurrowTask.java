@@ -1,8 +1,7 @@
-package com.example.natclient.fun.impl.task;
+package com.example.natclient.consumer.task;
 
 import com.alibaba.fastjson.JSONObject;
 import com.example.base.domain.event.PacketEvent;
-import com.example.base.key.Key;
 import com.example.base.task.abs.AbsUDPTask;
 import com.example.eventbus.EventBus;
 import com.example.eventbus.bean.Event;
@@ -31,19 +30,14 @@ public class BurrowTask extends AbsUDPTask {
         JSONObject msg = event.msg;
         JSONObject params = msg.getJSONObject("params");
         String host = getStringParam(params, "host");
-        String token = msg.getString("token");
+        String token = getStringParam(params, "token");
         int port = getIntParam(params, "port");
 
-        ClientBurrowAction burrowEvent = new ClientBurrowAction(
-                host,
+        ClientBurrowAction burrowEvent = new ClientBurrowAction(host,
                 port,
                 token,
                 event.fromHost,
                 event.fromPort);
-        JSONObject respJson = getRespJSONObjectBase(msg);
-        respJson.put("token",token);
-        respJson.put("code", Key.Code.OK);
-        burrowEvent.setTag(respJson.toString());
         BurrowActionRepository.put(burrowEvent.getToken(),burrowEvent);
         EventBus.post(
                 new Event.Builder()

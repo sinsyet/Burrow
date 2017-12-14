@@ -3,6 +3,7 @@ package com.example.burrowserver.server;
 import com.example.base.channel.ifun.IChannelHandler;
 import com.example.base.consumer.abs.AbsPacketConsumer;
 import com.example.burrowserver.bean.BurrowAction;
+import com.example.burrowserver.bean.NatClient;
 import com.example.burrowserver.consumer.channel.BaseUDPChannelHandler;
 import com.example.burrowserver.consumer.packet.BasePacketConsumer;
 import com.example.burrowserver.consumer.packet.BurrowPacketConsumer;
@@ -11,12 +12,9 @@ import com.example.engine.TaskExecutors;
 import com.example.eventbus.EventBus;
 import com.example.eventbus.anno.Subscribe;
 import com.example.utils.Log;
-import com.example.utils.NatUtil;
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.net.InetSocketAddress;
-import java.net.SocketAddress;
 import java.nio.ByteBuffer;
 import java.nio.channels.DatagramChannel;
 import java.nio.channels.SelectableChannel;
@@ -134,7 +132,7 @@ public class NatServer {
 
     private void registerPacketHandler() {
         packetConsumer = new BasePacketConsumer(mBaseChannel);
-        packetConsumer.setAndReturnNextPacketConsumer(
+        packetConsumer.setNextPacketConsumer(
                 new BurrowPacketConsumer(mBurrowChannel));
     }
 
@@ -158,6 +156,28 @@ public class NatServer {
     void onBurrowAction(String token){
         BurrowAction burrowAction = BurrowActionRepository.getBurrowAction(token);
         if(burrowAction == null) return;
+        switch (burrowAction.getActionStep()){
+            case BurrowAction.Step.CREATE:
+                launchBurrowAction(burrowAction);
+                break;
+            case BurrowAction.Step.RESP:
+                respBurrowAction(burrowAction);
+                break;
+        }
+    }
+
+    private void respBurrowAction(BurrowAction action){
+        try {
+            NatClient local = action.getLocal();
+            String respMsg = (String) local.getTag();
+            mBurrowChannel.send(
+                    ByteBuffer.wrap(respMsg.getBytes("UTF-8")),
+                    new InetSocketAddress(local.host,local.burrowPort));
+        }catch (Exception e){
+            Log.e(TAG,"respBurrowAction: "+e.getMessage());
+        }
+    }
+    private void launchBurrowAction(BurrowAction burrowAction) {
         try {
             burrowAction.launch(mBurrowChannel);
         } catch (IOException e) {

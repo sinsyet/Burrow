@@ -12,14 +12,33 @@ public class ClientBurrowAction {
     public String token;
     public long action;
     public long activeStamp;
+    public String serverHost;
+    public int serverPort;
+    private ThreadLocal<Object> threadLocals = new ThreadLocal<>();
 
     public ClientBurrowAction(){}
-    public ClientBurrowAction(String rHost, int rPort, String token){
+    public ClientBurrowAction(String rHost,
+                              int rPort,
+                              String token,
+                              String serverHost,
+                              int serverPort){
         this.host = rHost;
         this.port = rPort;
         this.token = token;
         this.action = ACTION.RESPONSE;
+        this.serverHost = serverHost;
+        this.serverPort = serverPort;
         updateActiveStamp();
+    }
+
+    public void setTag(Object obj){
+        threadLocals.set(obj);
+    }
+
+    public Object getTag(){
+        Object obj = threadLocals.get();
+        threadLocals.remove();
+        return obj;
     }
 
     public String getToken(){

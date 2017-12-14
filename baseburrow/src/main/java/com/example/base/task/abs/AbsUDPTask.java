@@ -32,6 +32,7 @@ public abstract class AbsUDPTask implements ITask<PacketEvent> {
             try {
                 handlePacket(temp);
             }catch (Exception e){
+                e.printStackTrace();
                 Log.e(TAG,"handlePacket Exception: "+e.getMessage());
             }
         }
