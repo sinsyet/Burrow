@@ -39,7 +39,7 @@ public class BurrowTask extends AbsUDPTask {
                 port,
                 token,
                 event.fromHost,
-                event.fromPort);
+                event.fromPort, ClientBurrowAction.BurrowRole.PASSIVE);
         JSONObject respJson = getRespJSONObjectBase(msg);
         respJson.put("token",token);
         respJson.put("code", Key.Code.OK);

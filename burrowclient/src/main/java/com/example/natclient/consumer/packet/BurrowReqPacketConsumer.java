@@ -5,6 +5,7 @@ import com.example.base.domain.event.PacketEvent;
 import com.example.base.key.Key;
 import com.example.base.task.abs.AbsUDPTask;
 import com.example.natclient.consumer.task.Burrow102Task;
+import com.example.natclient.consumer.task.Resp52Task;
 import com.example.natclient.consumer.task.Resp_102Task;
 import com.example.natclient.consumer.task.Resp_4Task;
 import com.example.natclient.fun.impl.task.BurrowTask;
@@ -18,6 +19,7 @@ public class BurrowReqPacketConsumer extends AbsPacketConsumer {
     private static final String TAG = "BurrowReqPacketConsumer";
     private Map<Integer,AbsUDPTask> mTasks = new HashMap<>();
     {
+        mTasks.put(Key.T.REQ_52,new Resp52Task(getChannel()));
         mTasks.put(- Key.T.REQ_102,new Resp_102Task(getChannel()));
         mTasks.put(- Key.T.REQ_BURROW,new Resp_4Task(getChannel()));
     }

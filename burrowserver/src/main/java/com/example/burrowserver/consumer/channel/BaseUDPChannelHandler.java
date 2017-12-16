@@ -31,7 +31,9 @@ public class BaseUDPChannelHandler extends AbsUDPChannelHandler {
                 int port = receive.getPort();
                 try {
                     JSONObject jsonObject = JSONObject.parseObject(msg);
-                    Log.e(TAG,"onRead: "+jsonObject.toString());
+                    Log.e(TAG,"onRead: fromHost: "+host+
+                            " fromPort: "+port +
+                            " msg: " + jsonObject.toString());
                     postPacketEvent(
                             new PacketEvent.Builder()
                                     .fromHost(host)

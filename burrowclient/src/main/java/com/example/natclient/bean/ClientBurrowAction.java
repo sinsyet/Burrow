@@ -15,19 +15,21 @@ public class ClientBurrowAction {
     public String serverHost;
     public int serverPort;
     private ThreadLocal<Object> threadLocals = new ThreadLocal<>();
-
+    private BurrowRole role;
     public ClientBurrowAction(){}
     public ClientBurrowAction(String rHost,
                               int rPort,
                               String token,
                               String serverHost,
-                              int serverPort){
+                              int serverPort,
+                              BurrowRole role){
         this.host = rHost;
         this.port = rPort;
         this.token = token;
         this.action = ACTION.RESPONSE;
         this.serverHost = serverHost;
         this.serverPort = serverPort;
+        this.role = role;
         updateActiveStamp();
     }
 
@@ -63,5 +65,10 @@ public class ClientBurrowAction {
         int RESP_CONNECT	= 4;	 // 响应打洞报文, 这个过程被叫应该建立起TCP的服务端程序等待主叫连接
 
         int BURROW_SUCCESS	= 5;	 // 打洞成功, 主叫发起连接被叫的tcp连接;
+    }
+
+    public enum BurrowRole{
+        PASSIVE,        // 被叫
+        ACTIVE          // 主叫
     }
 }

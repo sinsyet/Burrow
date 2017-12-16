@@ -37,7 +37,8 @@ public class BurrowTask extends AbsUDPTask {
                 port,
                 token,
                 event.fromHost,
-                event.fromPort);
+                event.fromPort,
+                ClientBurrowAction.BurrowRole.PASSIVE);
         BurrowActionRepository.put(burrowEvent.getToken(),burrowEvent);
         EventBus.post(
                 new Event.Builder()

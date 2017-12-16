@@ -17,15 +17,15 @@ public class Resp_102Task extends AbsUDPTask {
 
     @Override
     protected void handlePacket(PacketEvent event) {
-        Log.e(TAG,"consumePacket: "+event.msg.toString()
-                +", fromHost: "+event.fromHost
-                 +", fromPort: "+event.fromPort);
+        Log.e(TAG,"handlePacket: 打洞通啦, 我是主叫 -- "+event.msg.toString()
+                +", 对方的主机: "+event.fromHost
+                 +", 对方的端口: "+event.fromPort);
         JSONObject msg = event.msg;
-        JSONObject respBase = getRespJSONObjectBase(msg);
-        JSONObject params = msg.getJSONObject("params");
-        String token = params.getString("token");
-        respBase.put("token",token);
-        sendMsg(respBase.toString(),event.fromHost,event.fromPort);
+        // JSONObject respBase = getRespJSONObjectBase(msg);
+        // JSONObject params = msg.getJSONObject("params");
+        String token = msg.getString("token");
+        // respBase.put("token",token);
+        // sendMsg(respBase.toString(),event.fromHost,event.fromPort);
         ClientBurrowAction burrowEvent = BurrowActionRepository.getBurrowEvent(token);
         burrowEvent.updateActiveStamp();
         burrowEvent.updateAction(ClientBurrowAction.ACTION.BURROW_SUCCESS);

@@ -199,7 +199,7 @@ public class NatClient {
 
             // 向被叫发送报文
             JSONObject sayHi = new JSONObject();
-            sayHi.put("t",-101);
+            sayHi.put("t", com.example.base.key.Key.T.REQ_101);
             mClientBurrowChannel.send(
                     ByteBuffer.wrap(sayHi.toString().getBytes("UTF-8")),
                     new InetSocketAddress(burrowEvent.host,burrowEvent.port)

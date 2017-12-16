@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.example.base.channel.abs.AbsUDPChannelHandler;
 import com.example.base.consumer.abs.AbsPacketConsumer;
 import com.example.base.domain.event.PacketEvent;
+import com.example.utils.Log;
 import com.example.utils.NatUtil;
 
 import java.net.InetSocketAddress;
@@ -17,6 +18,7 @@ import java.nio.channels.SelectionKey;
  * <p> udp协议通道处理器实现类 </p>
  */
 public class BaseUDPChannelHandlerImpl extends AbsUDPChannelHandler {
+    private static final String TAG = "BaseUDPChannelHandlerImpl";
     private ByteBuffer buf = ByteBuffer.allocate(1024);
     public BaseUDPChannelHandlerImpl(AbsPacketConsumer consumer) {
         super(consumer);
@@ -31,6 +33,9 @@ public class BaseUDPChannelHandlerImpl extends AbsUDPChannelHandler {
             int fromPort = receive.getPort();
             String msg = NatUtil.getMsgByByteBuffer(buf, true);
             JSONObject jsonObject = JSONObject.parseObject(msg);
+            Log.e(TAG,"onRead: fromHost: "+fromHost+
+                    " fromPort: "+ fromPort +
+                    " msg: " + jsonObject.toString());
             postPacketEvent(
                     new PacketEvent.Builder()
                     .fromHost(fromHost)

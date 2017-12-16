@@ -6,6 +6,8 @@ dependencies {
     compile project(':jutilslib')
     compile project(path: ':baseburrow')
 }
-
+tasks.withType(JavaCompile) {
+    options.encoding = "UTF-8"
+}
 sourceCompatibility = "1.8"
 targetCompatibility = "1.8"
