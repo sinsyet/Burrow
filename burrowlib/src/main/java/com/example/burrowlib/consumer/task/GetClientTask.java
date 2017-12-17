@@ -1,0 +1,54 @@
+package com.example.burrowlib.consumer.task;
+
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
+import com.example.base.event.PacketEvent;
+import com.example.base.task.abs.AbsUDPTask;
+import com.example.burrowlib.bean.NatResponse;
+import com.example.burrowlib.engine.RequestQueue;
+import com.example.burrowlib.fun.base.IRequestObserver;
+
+
+import java.nio.channels.DatagramChannel;
+
+/**
+ * @author YGX
+ *
+ * 获取客户端
+ */
+
+public class GetClientTask extends AbsUDPTask {
+
+    public GetClientTask(DatagramChannel handler) {
+        super(handler);
+    }
+
+    @Override
+    protected void handlePacket(PacketEvent event) {
+        onRunTask(event.msg);
+    }
+
+    protected void onRunTask(JSONObject json) {
+        IRequestObserver observer = RequestQueue.get(json.getLongValue("mid"));
+        if(observer == null) return;
+
+        int code = json.getIntValue("code");
+        NatResponse resp;
+        if(code == 200){
+            JSONObject result = json.getJSONObject("extra");
+            resp = new NatResponse.Builder()
+                    .code(200)
+                    .success(true)
+                    .r(result.toString())
+                    .build();
+        }else {
+            resp = new NatResponse.Builder()
+                    .code(code)
+                    .success(false)
+                    .em(json.getString("em"))
+                    .build();
+        }
+
+        observer.onResponse(resp);
+    }
+}

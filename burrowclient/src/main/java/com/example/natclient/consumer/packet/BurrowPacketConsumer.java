@@ -5,10 +5,7 @@ import com.example.base.domain.event.PacketEvent;
 import com.example.base.key.Key;
 import com.example.base.task.abs.AbsUDPTask;
 import com.example.natclient.consumer.task.Burrow102Task;
-import com.example.natclient.fun.impl.task.BurrowTask;
-import com.example.natclient.fun.impl.task.GetClientTask;
-import com.example.natclient.fun.impl.task.PitpatTask;
-import com.example.natclient.fun.impl.task.RegisterTask;
+import com.example.natclient.consumer.task.BurrowTask;
 
 import java.nio.channels.DatagramChannel;
 import java.util.HashMap;

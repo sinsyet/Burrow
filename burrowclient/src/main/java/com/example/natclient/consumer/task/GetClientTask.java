@@ -34,8 +34,7 @@ public class GetClientTask extends AbsUDPTask {
         int code = json.getIntValue("code");
         NatResponse resp;
         if(code == 200){
-            JSONObject result = json.getJSONObject("result");
-            JSONArray nats = result.getJSONArray("nats");
+            JSONObject result = json.getJSONObject("extra");
             resp = new NatResponse.Builder()
                     .code(200)
                     .success(true)

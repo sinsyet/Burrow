@@ -3,10 +3,10 @@ package com.example.natclient;
 import com.alibaba.fastjson.JSONObject;
 import com.example.base.channel.ifun.IChannelHandler;
 import com.example.base.consumer.abs.AbsPacketConsumer;
+import com.example.base.key.Key;
 import com.example.engine.TaskExecutors;
 import com.example.eventbus.EventBus;
 import com.example.eventbus.anno.Subscribe;
-import com.example.natclient.app.Key;
 import com.example.natclient.bean.ClientBurrowAction;
 import com.example.natclient.bean.Message;
 import com.example.natclient.bean.NatResponse;
@@ -16,9 +16,7 @@ import com.example.natclient.consumer.packet.BurrowPacketConsumer;
 import com.example.natclient.consumer.packet.BurrowReqPacketConsumer;
 import com.example.natclient.engine.RequestQueue;
 import com.example.natclient.fun.base.IRequestObserver;
-import com.example.natclient.fun.impl.channelhandler.InitiativeBurrowHandlerImpl;
 import com.example.natclient.repository.BurrowActionRepository;
-import com.example.natclient.repository.ChannelRepository;
 import com.example.utils.Log;
 
 import java.io.IOException;
@@ -269,7 +267,6 @@ public class NatClient {
         DatagramChannel datagramChannel = DatagramChannel.open();
         datagramChannel.configureBlocking(false);
         datagramChannel.register(selector,SelectionKey.OP_READ);
-        // ChannelRepository.register(datagramChannel,new InitiativeBurrowHandlerImpl(datagramChannel));
         return datagramChannel;
     }
 

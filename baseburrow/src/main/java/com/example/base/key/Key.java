@@ -21,6 +21,7 @@ public interface Key {
         int OK                          = 200;
         int NO_LTAG                     = 201;
         int NO_RTAG                     = 203;
+        int CLOSED_CHANNEL              = 204;
     }
 
     interface Em{

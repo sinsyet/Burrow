@@ -3,9 +3,9 @@ package com.example.natclient.consumer.packet;
 import com.example.base.consumer.abs.AbsPacketConsumer;
 import com.example.base.domain.event.PacketEvent;
 import com.example.base.task.abs.AbsUDPTask;
-import com.example.natclient.fun.impl.task.GetClientTask;
-import com.example.natclient.fun.impl.task.PitpatTask;
-import com.example.natclient.fun.impl.task.RegisterTask;
+import com.example.natclient.consumer.task.GetClientTask;
+import com.example.natclient.consumer.task.PitpatTask;
+import com.example.natclient.consumer.task.RegisterTask;
 
 import java.nio.channels.DatagramChannel;
 import java.util.HashMap;

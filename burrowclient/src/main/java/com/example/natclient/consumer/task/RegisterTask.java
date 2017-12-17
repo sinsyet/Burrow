@@ -2,11 +2,11 @@ package com.example.natclient.consumer.task;
 
 import com.alibaba.fastjson.JSONObject;
 import com.example.base.domain.event.PacketEvent;
+import com.example.base.key.Key;
 import com.example.base.task.abs.AbsUDPTask;
 import com.example.eventbus.EventBus;
 import com.example.eventbus.bean.Event;
 import com.example.natclient.NatClient;
-import com.example.natclient.app.Key;
 import com.example.natclient.bean.NatResponse;
 import com.example.natclient.engine.RequestQueue;
 import com.example.natclient.fun.base.IRequestObserver;

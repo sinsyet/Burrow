@@ -76,6 +76,8 @@ public abstract class AbsUDPTask implements ITask<PacketEvent> {
                                               String toHost,
                                               int toPort){
         resp.put("code", Key.Code.OK);
+        Log.e(TAG, "stuffAndSendSuccessResp: "+resp.toString()+",\n"
+        +" toHost: "+toHost+" toPort: "+toPort);
         return sendMsg(resp.toString(),toHost,toPort);
     }
 

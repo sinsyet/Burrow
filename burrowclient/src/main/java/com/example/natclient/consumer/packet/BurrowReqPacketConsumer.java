@@ -4,12 +4,9 @@ import com.example.base.consumer.abs.AbsPacketConsumer;
 import com.example.base.domain.event.PacketEvent;
 import com.example.base.key.Key;
 import com.example.base.task.abs.AbsUDPTask;
-import com.example.natclient.consumer.task.Burrow102Task;
 import com.example.natclient.consumer.task.Resp52Task;
 import com.example.natclient.consumer.task.Resp_102Task;
 import com.example.natclient.consumer.task.Resp_4Task;
-import com.example.natclient.fun.impl.task.BurrowTask;
-import com.example.utils.Log;
 
 import java.nio.channels.DatagramChannel;
 import java.util.HashMap;
