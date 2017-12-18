@@ -51,9 +51,21 @@ public class BurrowAction {
         jsonObject.put("mid", mid);
         jsonObject.put("token",getBurrowToken());
         JSONObject extra = new JSONObject();
-        extra.put("host",local.host);
+
+        String host;
+        int port;
+        if(local.host.equals(remote.host)){
+            extra.put("rtype",1);
+            host = local.lanBurrowHost;
+            port = local.lanBurrowPort;
+        }else {
+            extra.put("rtype",0);
+            host = local.host;
+            port = local.burrowPort;
+        }
+        extra.put("host",host);
         extra.put("ltag",local.tag);
-        extra.put("port",local.burrowPort);
+        extra.put("port",port);
         jsonObject.put("params",extra);
 
         channel.send(

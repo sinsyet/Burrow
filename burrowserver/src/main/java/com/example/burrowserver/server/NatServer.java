@@ -132,8 +132,8 @@ public class NatServer {
 
     private void registerPacketHandler() {
         packetConsumer = new BasePacketConsumer(mBaseChannel);
-        packetConsumer.setNextPacketConsumer(
-                new BurrowPacketConsumer(mBurrowChannel));
+        /*packetConsumer.setNextPacketConsumer(
+                new BurrowPacketConsumer(mBurrowChannel));*/
     }
 
     private void initSelector() throws IOException {
@@ -170,7 +170,7 @@ public class NatServer {
         try {
             NatClient local = action.getLocal();
             String respMsg = (String) local.getTag();
-            mBurrowChannel.send(
+            /*mBurrowChannel*/mBaseChannel.send(
                     ByteBuffer.wrap(respMsg.getBytes("UTF-8")),
                     new InetSocketAddress(local.host,local.burrowPort));
         }catch (Exception e){
@@ -179,7 +179,7 @@ public class NatServer {
     }
     private void launchBurrowAction(BurrowAction burrowAction) {
         try {
-            burrowAction.launch(mBurrowChannel);
+            burrowAction.launch(/*mBurrowChannel*/mBaseChannel);
         } catch (IOException e) {
 
         }

@@ -3,6 +3,10 @@ package com.example.utils;
 
 import java.io.Closeable;
 import java.io.IOException;
+import java.net.InetAddress;
+import java.net.InetSocketAddress;
+import java.net.SocketAddress;
+import java.net.UnknownHostException;
 import java.nio.ByteBuffer;
 
 import sun.misc.BASE64Encoder;
@@ -55,4 +59,13 @@ public class NatUtil {
         return "";
     }
 
+    public static String getLocalAddress(){
+        try {
+            InetAddress localHost = InetAddress.getLocalHost();
+            return localHost.getHostAddress();
+        } catch (UnknownHostException e) {
+
+        }
+        return "";
+    }
 }

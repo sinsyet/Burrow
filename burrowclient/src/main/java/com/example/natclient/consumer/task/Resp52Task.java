@@ -32,6 +32,7 @@ public class Resp52Task extends AbsUDPTask {
         String rhost = params.getString("rhost");
         int rport = params.getIntValue("rport");
         String token = msg.getString("token");
+        int rtype = params.getIntValue("rtype");
         respBase.put("token", token);
         // response to server
         sendMsg(respBase.toString(),event.fromHost,event.fromPort);
@@ -42,7 +43,8 @@ public class Resp52Task extends AbsUDPTask {
                 token,
                 event.fromHost,
                 event.fromPort,
-                ClientBurrowAction.BurrowRole.ACTIVE);
+                ClientBurrowAction.BurrowRole.ACTIVE,
+                rtype);
         BurrowActionRepository.put(token,clientBurrowAction);
         // request to clientB
         JSONObject req = new JSONObject();

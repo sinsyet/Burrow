@@ -10,7 +10,13 @@ public class NatClient {
     public String       usn;
     public boolean      isNating;
     public int          burrowPort;     // 打洞专业端口,
+
+    public String       lanBurrowHost;  // 局域网打洞IP
+    public int          lanBurrowPort;  // 局域网打洞端口
+
     private ThreadLocal<Object> mTl = new ThreadLocal<>();
+
+
 
     public NatClient(){}
 

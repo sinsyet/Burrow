@@ -18,9 +18,13 @@ import com.example.natclient.engine.RequestQueue;
 import com.example.natclient.fun.base.IRequestObserver;
 import com.example.natclient.repository.BurrowActionRepository;
 import com.example.utils.Log;
+import com.example.utils.NatUtil;
 
 import java.io.IOException;
+import java.net.DatagramSocket;
+import java.net.InetAddress;
 import java.net.InetSocketAddress;
+import java.net.SocketAddress;
 import java.nio.ByteBuffer;
 import java.nio.channels.DatagramChannel;
 import java.nio.channels.SelectableChannel;
@@ -69,14 +73,16 @@ public class NatClient {
     };
     private String tag;
     private DatagramChannel mClientBurrowChannel;
-    private int mBurrowPort;
+    private int mBurrowPort = 10000;
     private BasePacketConsumer basePacketConsumer;
     private IChannelHandler baseUDPChannelHandler;
     private Map<Class<? extends SelectableChannel>,IChannelHandler> mChannelHandlers
             = new HashMap<>();
     public NatClient() throws IOException {
         mClientBurrowChannel = DatagramChannel.open();
-        mBurrowPort = mClientBurrowChannel.socket().getPort();
+        // mClientBurrowChannel.socket().bind(new InetSocketAddress(mBurrowPort));
+        // mBurrowPort = mClientBurrowChannel.socket().getPort();
+
         mClientBurrowChannel.configureBlocking(false);
 
         mClientBaseChannel = DatagramChannel.open();
@@ -191,8 +197,19 @@ public class NatClient {
 
         String respMsg = (String) burrowEvent.getTag();
         try {
+            mClientBurrowChannel.send(ByteBuffer.wrap("hi".getBytes()),
+                    new InetSocketAddress("8.8.8.8",20000));
+            DatagramSocket socket = mClientBurrowChannel.socket();
+            int lanPort = socket.getLocalPort();
+            String lanHost = NatUtil.getLocalAddress();
+            JSONObject extra = new JSONObject();
+            extra.put("lanhost",lanHost);
+            extra.put("lanport",lanPort);
+            JSONObject jsonObject = JSONObject.parseObject(respMsg);
+            jsonObject.put("extra",extra);
+            Log.e(TAG, "onClientBurrowAction: "+jsonObject.toString());
             mClientBurrowChannel.send(
-                    ByteBuffer.wrap(respMsg.getBytes("UTF-8")),
+                    ByteBuffer.wrap(jsonObject.toString().getBytes("UTF-8")),
                     new InetSocketAddress(burrowEvent.serverHost,burrowEvent.serverPort));
 
             // 向被叫发送报文
@@ -238,16 +255,24 @@ public class NatClient {
         JSONObject params = new JSONObject();
         params.put("tag",tag);
         params.put("rtag",target);
-        jsonObject.put("params",params);
+
         try {
             DatagramChannel burrowChannel = getBurrowChannel();
-            int port = burrowChannel.socket().getPort();
+            burrowChannel.send(ByteBuffer.wrap("hi".getBytes()),
+                    new InetSocketAddress("8.8.8.8",20000));
+            DatagramSocket socket = burrowChannel.socket();
+            int lanPort = socket.getLocalPort();
+            String lanHost = NatUtil.getLocalAddress();
+            Log.e(TAG, "burrow: "+lanPort+" -- "+lanHost);
+            params.put("lanport",lanPort);
+            params.put("lanhost",lanHost);
+            jsonObject.put("params",params);
             // burrowChannel.configureBlocking(false);
             AbsPacketConsumer burrowReqPacketConsumer =
                     new BurrowReqPacketConsumer(burrowChannel);
             basePacketConsumer.setNextPacketConsumer(burrowReqPacketConsumer);
             // burrowChannel.register(selector,SelectionKey.OP_READ);
-            mBurrowConsumers.put(port,burrowReqPacketConsumer);
+            mBurrowConsumers.put(this.port,burrowReqPacketConsumer);
             sendMsg(burrowChannel,jsonObject.toString(),host, this.port);
             RequestQueue.put(mid,observer);
         } catch (Exception e) {

@@ -16,13 +16,14 @@ public class ClientBurrowAction {
     public int serverPort;
     private ThreadLocal<Object> threadLocals = new ThreadLocal<>();
     private BurrowRole role;
+    private int rType;  // 远程是在公网还是内网里, 0表示公网, 1表示局域网
     public ClientBurrowAction(){}
     public ClientBurrowAction(String rHost,
                               int rPort,
                               String token,
                               String serverHost,
                               int serverPort,
-                              BurrowRole role){
+                              BurrowRole role,int rType){
         this.host = rHost;
         this.port = rPort;
         this.token = token;
@@ -30,6 +31,7 @@ public class ClientBurrowAction {
         this.serverHost = serverHost;
         this.serverPort = serverPort;
         this.role = role;
+        this.rType = rType;
         updateActiveStamp();
     }
 

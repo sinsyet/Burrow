@@ -19,6 +19,9 @@ public abstract class AbsUDPTask implements ITask<PacketEvent> {
         this.channel = channel;
     }
 
+    protected DatagramChannel getChannel(){
+        return channel;
+    }
     @Override
     public void handle(PacketEvent event) {
         this.event = event;

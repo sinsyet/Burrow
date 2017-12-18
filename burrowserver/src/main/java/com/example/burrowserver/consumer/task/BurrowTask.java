@@ -45,7 +45,10 @@ public class BurrowTask extends AbsUDPTask {
         NatClient local = NatClientRepository.getNatClient(tag);
         local.burrowPort = event.fromPort;
         NatClient remote = NatClientRepository.getNatClient(rtag);
-
+        // if(local.host.equals(remote.host)){
+        local.lanBurrowHost = params.getString("lanhost");
+        local.lanBurrowPort = params.getIntValue("lanport");
+        // }
         BurrowAction burrowAction = new BurrowAction(local, remote);
         final String token = burrowAction.getBurrowToken();
         burrowAction.setActionStep(BurrowAction.Step.CREATE);

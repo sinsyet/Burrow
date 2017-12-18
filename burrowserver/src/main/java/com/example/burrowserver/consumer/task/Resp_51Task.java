@@ -36,7 +36,9 @@ public class Resp_51Task extends AbsUDPTask {
         JSONObject msg = event.msg;
         String token = msg.getString("token");
         BurrowAction burrowAction = BurrowActionRepository.getBurrowAction(token);
-
+        JSONObject extra = msg.getJSONObject("extra");
+        String lanhost = extra.getString("lanhost");
+        int lanport = extra.getIntValue("lanport");
         // 打洞不存在
         if (burrowAction == null) return;
 
@@ -44,12 +46,25 @@ public class Resp_51Task extends AbsUDPTask {
         jsonObject.put("t", Key.T.REQ_52);
         jsonObject.put("mid", System.currentTimeMillis());
         jsonObject.put("token", token);
-        JSONObject params = new JSONObject();
-        params.put("rport", fromPort);
-        params.put("rhost", fromHost);
-        jsonObject.put("params", params);
+
         NatClient local = burrowAction.getLocal();
         NatClient remote = burrowAction.getRemote();
+        remote.lanBurrowHost = lanhost;
+        remote.lanBurrowPort = lanport;
+        // 如果主叫和被叫的公网ip地址一致, 则将地址替换为它们的内网ip和端口
+        JSONObject params = new JSONObject();
+        if(local.host.equals(remote.host)){
+            params.put("rport", lanport);
+            params.put("rhost", lanhost);
+            params.put("rtype",1);
+        }else {
+            params.put("rport", fromPort);
+            params.put("rhost", fromHost);
+            params.put("rtype", 0);
+        }
+
+        jsonObject.put("params", params);
+
         remote.burrowPort = fromPort;
         remote.updateActiveStamp();
         local.setTag(jsonObject.toString());

@@ -8,6 +8,7 @@ import com.example.burrowserver.consumer.task.BurrowTask;
 import com.example.burrowserver.consumer.task.GetClientsTask;
 import com.example.burrowserver.consumer.task.PitpatTask;
 import com.example.burrowserver.consumer.task.RegisterTask;
+import com.example.burrowserver.consumer.task.Resp_51Task;
 
 import java.nio.channels.DatagramChannel;
 import java.util.HashMap;
@@ -25,6 +26,7 @@ public class BasePacketConsumer extends AbsPacketConsumer {
         mTasks.put(Key.T.REQ_PITPAT,new PitpatTask(udpChannel));
         mTasks.put(Key.T.REQ_GET_CLIENTS,new GetClientsTask(udpChannel));
         mTasks.put(Key.T.REQ_BURROW,new BurrowTask(udpChannel));
+        mTasks.put(-Key.T.REQ_51,new Resp_51Task(udpChannel));
     }
     public BasePacketConsumer(DatagramChannel udpChannel) {
         super(udpChannel);
